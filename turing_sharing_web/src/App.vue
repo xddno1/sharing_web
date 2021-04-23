@@ -1,12 +1,22 @@
 <template>
-  <div class="contianer">
-    <router-view></router-view>
+  <div>
+    <my-haed></my-haed>
+    <div class="contianer">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
+import MyHead from "./components/myhead";
 export default {
   name: "App",
+  components: {
+    MyHead,
+  },
+  data() {
+    return {};
+  },
 };
 </script>
 

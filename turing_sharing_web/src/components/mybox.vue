@@ -15,6 +15,9 @@
 export default {
   name: "mybox",
   components: {},
+  data() {
+    return {};
+  },
 };
 </script>
 
