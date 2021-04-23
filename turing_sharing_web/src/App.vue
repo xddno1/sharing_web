@@ -14,9 +14,6 @@ export default {
   components: {
     MyHead,
   },
-  data() {
-    return {};
-  },
 };
 </script>
 
