@@ -1,4 +1,8 @@
-<template></template>
+<template>
+  <div class="contianer">
+    <router-view></router-view>
+  </div>
+</template>
 
 <script>
 export default {
@@ -7,4 +11,7 @@ export default {
 </script>
 
 <style>
+.contianer {
+  padding: 50px 10%;
+}
 </style>
