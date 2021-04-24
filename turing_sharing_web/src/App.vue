@@ -1,8 +1,8 @@
 <template>
   <div>
-    <my-haed></my-haed>
-    <div class="contianer">
-      <router-view></router-view>
+    <my-head></my-head>
+    <div class="contianer body">
+      <!-- <router-view></router-view> -->
     </div>
   </div>
 </template>
@@ -11,14 +11,16 @@
 import MyHead from "./components/myhead";
 export default {
   name: "App",
-  components: {
-    MyHead,
-  },
+  components: { MyHead },
 };
 </script>
 
 <style>
 .contianer {
-  padding: 50px 10%;
+  padding: 0 10%;
+}
+.body {
+  padding-bottom: 50px;
+  padding-top: 120px;
 }
 </style>
