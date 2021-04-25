@@ -141,6 +141,9 @@ export default {
             this.visible = false;
             this.$message.success("登录成功！");
             this.token = a.data.token;
+            this.$router.push({
+              name: "admin",
+            });
           }
           if (a.data.msg == null) {
             this.$message.error("请检查用户名和密码");

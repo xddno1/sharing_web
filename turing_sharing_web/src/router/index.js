@@ -4,6 +4,7 @@ import Router from "vue-router";
 Vue.use(Router);
 const index = () => import("@/components/myindex");
 const item = () => import("@/components/myitem");
+const admin = () => import("@/components/myadmin");
 export default new Router({
   routes: [
     {
@@ -20,6 +21,11 @@ export default new Router({
       path: "/item",
       name: "item",
       component: item
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      component: admin
     }
   ]
 });
