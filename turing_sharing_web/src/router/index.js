@@ -3,7 +3,7 @@ import Router from "vue-router";
 
 Vue.use(Router);
 const index = () => import("@/components/myindex");
-const page = () => import("@/components/mypage");
+const item = () => import("@/components/myitem");
 export default new Router({
   routes: [
     {
@@ -17,9 +17,9 @@ export default new Router({
       component: index
     },
     {
-      path: "/page",
-      name: "page",
-      component: page
+      path: "/item",
+      name: "item",
+      component: item
     }
   ]
 });

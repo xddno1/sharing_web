@@ -5,13 +5,12 @@
       :key="index"
       :boxitem="item"
     ></mybox>
-    <span v-if="pageNo != 1" class="changepagebtn" @click="changepagefunc('-')"
+    <!-- <a-pagination simple :total="ItemCount" :defaultPageSize="pagesize" /> -->
+    <span v-if="havepre" class="changepagebtn" @click="changepagefunc('-')"
       ><a-icon type="left" />上一页</span
     >
-    <span
-      class="changepagebtn"
-      style="float: right"
-      @click="changepagefunc('+')"
+    <span class="showpagecount">{{ pageNo }} / {{ maxpage }}</span>
+    <span v-if="havenext" class="changepagebtn" @click="changepagefunc('+')"
       >下一页<a-icon type="right"
     /></span>
   </div>
@@ -24,17 +23,20 @@ export default {
   name: "myindex",
   components: { mybox },
   data() {
-    return { pageNo: 1, boxdata: {} };
+    return { pageNo: 1, boxdata: {}, ItemCount: 0, pagesize: 5 };
   },
   methods: {
     getbox() {
       axios
         .get(
-          `http://121.4.187.232:8080/passage/queryAllPassage?pageNo=${this.pageNo}&pageSize=5`
+          `http://121.4.187.232:8080/passage/queryAllPassage?pageNo=${this.pageNo}&pageSize=${this.pagesize}`
         )
         .then((a) => {
+          console.log(a);
+          console.log(a.data);
+          console.log(a.data.passageItem);
           if (a.data.length != 0) {
-            this.boxdata = a.data;
+            this.boxdata = a.data.passageItem;
           } else {
             this.$message.error("后面没有啦 T_T");
           }
@@ -49,6 +51,17 @@ export default {
       this.getbox();
     },
   },
+  computed: {
+    maxpage: function () {
+      return Math.ceil(this.ItemCount / this.pagesize);
+    },
+    havepre: function () {
+      return this.pageNo != 1;
+    },
+    havenext: function () {
+      return this.maxpage != this.pageNo;
+    },
+  },
   created() {
     // getbox函数，因为在created的时候函数还没有加载，不能直接调用函数
     ///////////////////////////////////////////////////////////////////////////////////
@@ -58,7 +71,8 @@ export default {
       )
       .then((a) => {
         console.log(a);
-        this.boxdata = a.data;
+        this.ItemCount = a.data.passageItemCount;
+        this.boxdata = a.data.passageItem;
       });
     ///////////////////////////////////////////////////////////////////////////////////
   },
@@ -68,5 +82,8 @@ export default {
 <style>
 .changepagebtn {
   cursor: pointer;
+}
+.showpagecount {
+  text-align: center;
 }
 </style>

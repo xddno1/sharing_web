@@ -1,10 +1,10 @@
 <template>
   <div class="mybox">
     <div class="box-title">
-      <span class="my-title" @click="intopage"> {{ boxitem.title }} </span>
-      <span class="my-time">{{ boxitem.time }}</span>
+      <span class="my-box-title" @click="intopage"> {{ boxitem.title }} </span>
+      <span class="my-box-time">{{ boxitem.time }}</span>
     </div>
-    <span class="my-describe">{{ boxitem.content }} </span>
+    <span class="my-box-describe">{{ boxitem.content }} </span>
   </div>
 </template>
 
@@ -19,8 +19,10 @@ export default {
   methods: {
     intopage() {
       this.$router.push({
-        name: "page",
-        params: { pageid: this.boxitem.id },
+        name: "item",
+        query: {
+          item: this.boxitem.id,
+        },
       });
       console.log(this.boxitem.id);
     },
@@ -37,7 +39,7 @@ export default {
   padding: 10px 25px;
   margin-bottom: 20px;
 }
-.my-title {
+.my-box-title {
   font-size: 30px;
   font-weight: 600;
   line-height: 60px;
@@ -48,16 +50,16 @@ export default {
     color: #45b6f7;
   }
 }
-.my-title:hover {
+.my-box-title:hover {
   animation-name: titlecolor;
   animation-duration: 0.1s;
   animation-fill-mode: forwards;
 }
-.my-time {
+.my-box-time {
   float: right;
   line-height: 60px;
 }
-.my-describe {
+.my-box-describe {
   font-size: 13px;
   color: #666;
   display: flex;
