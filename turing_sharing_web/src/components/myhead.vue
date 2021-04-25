@@ -1,12 +1,18 @@
 <template>
   <div class="myhead">
-    <div class="contianer">
+    <div class="headcontianer">
       <div class="welcome">
         <span>欢迎光临</span>
         <span>我们一直在努力</span>
       </div>
+
       <span v-if="token == ''" class="login" @click="showModal">请登录</span>
-      <span v-else class="login">您好，{{ this.userform.name }}</span>
+      <a-dropdown v-else>
+        <span class="login">您好，{{ this.userform.name }}</span>
+        <a-menu slot="overlay" @click="unlogin">
+          <a-menu-item key="1"> 退出登录 </a-menu-item>
+        </a-menu>
+      </a-dropdown>
     </div>
     <a-modal :visible="visible" :footer="null" @cancel="handleCancel">
       <a-tabs default-active-key="1">
@@ -35,7 +41,11 @@
             <a-form-item label="密码">
               <a-input type="password" v-model="adminform.password" />
             </a-form-item>
-            <a-button style="margin-right: 10px; float: right" type="primary">
+            <a-button
+              style="margin-right: 10px; float: right"
+              type="primary"
+              @click="adminLogin"
+            >
               登录
             </a-button>
           </a-form>
@@ -117,6 +127,26 @@ export default {
           }
         });
     },
+    adminLogin() {
+      axios
+        .post(
+          `http://121.4.187.232:8080/user/adminLogin?password=${this.adminform.password}&username=${this.adminform.name}`
+        )
+        .then((a) => {
+          console.log(a);
+          console.log(a.data);
+          console.log(a.data.msg);
+          if (a.data.msg == "登录成功!!!") {
+            this.userform = this.adminform;
+            this.visible = false;
+            this.$message.success("登录成功！");
+            this.token = a.data.token;
+          }
+          if (a.data.msg == null) {
+            this.$message.error("请检查用户名和密码");
+          }
+        });
+    },
     onRegister() {
       axios
         .post(
@@ -141,6 +171,9 @@ export default {
           console.log(a.data);
         });
     },
+    unlogin() {
+      this.token = "";
+    },
   },
 
   created() {
@@ -158,7 +191,7 @@ export default {
   height: 50px;
   width: 100%;
 }
-.contianer {
+.headcontianer {
   padding: 0 10%;
 }
 .myhead .welcome {
