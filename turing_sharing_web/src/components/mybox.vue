@@ -1,7 +1,7 @@
 <template>
   <div class="mybox">
     <div class="box-title">
-      <span class="my-title"> {{ boxitem.title }} </span>
+      <span class="my-title" @click="intopage"> {{ boxitem.title }} </span>
       <span class="my-time">{{ boxitem.time }}</span>
     </div>
     <span class="my-describe">{{ boxitem.content }} </span>
@@ -15,6 +15,15 @@ export default {
   props: ["boxitem"],
   data() {
     return {};
+  },
+  methods: {
+    intopage() {
+      this.$router.push({
+        name: "page",
+        params: { pageid: this.boxitem.id },
+      });
+      console.log(this.boxitem.id);
+    },
   },
 };
 </script>
@@ -32,6 +41,17 @@ export default {
   font-size: 30px;
   font-weight: 600;
   line-height: 60px;
+  cursor: pointer;
+}
+@keyframes titlecolor {
+  to {
+    color: #45b6f7;
+  }
+}
+.my-title:hover {
+  animation-name: titlecolor;
+  animation-duration: 0.1s;
+  animation-fill-mode: forwards;
 }
 .my-time {
   float: right;
