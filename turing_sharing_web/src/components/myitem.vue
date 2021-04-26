@@ -55,13 +55,23 @@ export default {
   },
   methods: {
     downloadresource(index) {
-      axios
-        .post(
-          ` http://121.4.187.232:8080/passage/downResources?filePath=${this.resources[index].address}`
-        )
-        .then((a) => {
-          console.log(a);
-        });
+      axios({
+        method: "post",
+        url: `http://121.4.187.232:8080/passage/downResources?filePath=${this.resources[index].address}`,
+        responseType: "blob",
+      }).then((res) => {
+        console.log(res);
+        res = res.data;
+        let blob = new Blob([res], { type: res.type });
+        let downloadElement = document.createElement("a");
+        let href = window.URL.createObjectURL(blob);
+        downloadElement.href = href;
+        downloadElement.download = this.resources[index].address;
+        document.body.appendChild(downloadElement);
+        downloadElement.click();
+        document.body.removeChild(downloadElement);
+        window.URL.revokeObjectURL(href);
+      });
     },
     commentsubmit() {},
   },

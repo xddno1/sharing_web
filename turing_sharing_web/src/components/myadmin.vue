@@ -1,6 +1,8 @@
 <template>
   <div class="myadmin">
-    <div class="pages"></div>
+    <div class="pages">
+      <button>a</button>
+    </div>
   </div>
 </template>
 
