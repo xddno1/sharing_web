@@ -11,11 +11,11 @@ Vue.config.productionTip = false;
 
 const store = new Vuex.Store({
   state: {
-    token: ""
+    loginstate: {}
   },
   mutations: {
-    upDateToken(state, token) {
-      state.token = token;
+    upDateToken(state, data) {
+      state.loginstate = data;
     }
   }
 });

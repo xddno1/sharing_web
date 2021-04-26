@@ -32,9 +32,6 @@ export default {
           `http://121.4.187.232:8080/passage/queryAllPassage?pageNo=${this.pageNo}&pageSize=${this.pagesize}`
         )
         .then((a) => {
-          console.log(a);
-          console.log(a.data);
-          console.log(a.data.passageItem);
           if (a.data.length != 0) {
             this.boxdata = a.data.passageItem;
           } else {

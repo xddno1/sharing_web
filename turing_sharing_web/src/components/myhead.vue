@@ -76,9 +76,7 @@
 import axios from "axios";
 export default {
   name: "MyHead",
-
   components: {},
-
   data() {
     return {
       userform: {
@@ -117,8 +115,12 @@ export default {
           if (a.data.msg == "登录成功!!!") {
             this.visible = false;
             this.$message.success("登录成功！");
+            const loginstate = {
+              usertoken: a.data.token,
+              userid: a.data.userID,
+            };
             this.token = a.data.token;
-            this.$store.commit("upDateToken", a.data.token);
+            this.$store.commit("upDateToken", loginstate);
           }
           if (a.data.msg == null) {
             this.$message.error("密码错误！");
@@ -134,15 +136,15 @@ export default {
           `http://121.4.187.232:8080/user/adminLogin?password=${this.adminform.password}&username=${this.adminform.name}`
         )
         .then((a) => {
-          console.log(a);
-          console.log(a.data);
-          console.log(a.data.msg);
           if (a.data.msg == "登录成功!!!") {
             this.userform = this.adminform;
             this.visible = false;
             this.$message.success("登录成功！");
             this.token = a.data.token;
-            this.$store.commit("upDateToken", a.data.token);
+            const loginstate = {
+              admintoken: a.data.token,
+            };
+            this.$store.commit("upDateToken", loginstate);
             this.$router.push({
               name: "admin",
             });
@@ -168,7 +170,11 @@ export default {
               )
               .then((a) => {
                 this.token = a.data.token;
-                this.$store.commit("upDateToken", a.data.token);
+                const loginstate = {
+                  usertoken: a.data.token,
+                  userid: a.data.userID,
+                };
+                this.$store.commit("upDateToken", loginstate);
                 this.userform = this.registerform;
               });
           } else {
@@ -184,7 +190,7 @@ export default {
         });
       }
       this.token = "";
-      this.$store.commit("upDateToken", "");
+      this.$store.commit("upDateToken", {});
     },
   },
 

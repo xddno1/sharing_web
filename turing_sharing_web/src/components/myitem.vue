@@ -20,7 +20,7 @@
     </div>
     <div>
       <div>我也要评论:</div>
-      <a-input v-model="mycomment"></a-input>
+      <a-input v-model="addcomment"></a-input>
       <a-button
         style="margin-right: 10px; float: right"
         type="primary"
@@ -50,7 +50,7 @@ export default {
       comments: [],
       pictures: [],
       mycomment: "",
-      token: this.$store.state.token,
+      addcomment: "",
     };
   },
   methods: {
@@ -73,18 +73,48 @@ export default {
         window.URL.revokeObjectURL(href);
       });
     },
-    commentsubmit() {},
+    commentsubmit() {
+      if (
+        !this.$store.state.loginstate.userid &&
+        !this.$store.state.loginstate.admintoken
+      ) {
+        this.$message.error("请先登录");
+      } else {
+        console.log(this);
+        axios({
+          method: "post",
+          url: `http://121.4.187.232:8080/comment/createComment?content=${this.addcomment}&passageID=${this.pageid}&userID=${this.$store.state.loginstate.userid}`,
+          headers: {
+            token: this.$store.state.loginstate.usertoken,
+          },
+        }).then((e) => {
+          this.$message.success("评论成功！");
+          this.addcomment = "";
+          axios
+            .get(
+              ` http://121.4.187.232:8080/passage/queryCommentByPassageID?passageID=${this.pageid}`
+            )
+            .then((e) => {
+              this.$message.success("获取评论成功");
+              this.comments = e.data;
+              console.log(e);
+            })
+            .catch((e) => {
+              this.$message.error("获取评论失败！");
+            });
+        });
+      }
+    },
   },
   created() {
-    console.log(this.$store);
-    console.log(this.token);
+    console.log(this.$store.state.loginstate.usertoken);
+    console.log(this.$store.state.loginstate.userid);
     this.pageid = this.$route.query.item;
     axios
       .get(
         ` http://121.4.187.232:8080/passage/passageResources?passageID=${this.pageid}`
       )
       .then((a) => {
-        console.log(a.data);
         // a[0].content       内容
         // a[0].time          时间
         // a[0].title         标题
