@@ -50,6 +50,7 @@ export default {
       comments: [],
       pictures: [],
       mycomment: "",
+      token: this.$store.state.token,
     };
   },
   methods: {
@@ -62,8 +63,11 @@ export default {
           console.log(a);
         });
     },
+    commentsubmit() {},
   },
   created() {
+    console.log(this.$store);
+    console.log(this.token);
     this.pageid = this.$route.query.item;
     axios
       .get(

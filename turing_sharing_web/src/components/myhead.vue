@@ -118,6 +118,7 @@ export default {
             this.visible = false;
             this.$message.success("登录成功！");
             this.token = a.data.token;
+            this.$store.commit("upDateToken", a.data.token);
           }
           if (a.data.msg == null) {
             this.$message.error("密码错误！");
@@ -141,6 +142,7 @@ export default {
             this.visible = false;
             this.$message.success("登录成功！");
             this.token = a.data.token;
+            this.$store.commit("upDateToken", a.data.token);
             this.$router.push({
               name: "admin",
             });
@@ -166,6 +168,7 @@ export default {
               )
               .then((a) => {
                 this.token = a.data.token;
+                this.$store.commit("upDateToken", a.data.token);
                 this.userform = this.registerform;
               });
           } else {
@@ -175,7 +178,13 @@ export default {
         });
     },
     unlogin() {
+      if (this.$route.path == "/admin") {
+        this.$router.replace({
+          name: "index",
+        });
+      }
       this.token = "";
+      this.$store.commit("upDateToken", "");
     },
   },
 
