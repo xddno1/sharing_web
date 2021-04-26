@@ -88,7 +88,7 @@ export default {
         // a[0].content       内容
         // a[0].time          时间
         // a[0].title         标题
-        // a[1]               支援
+        // a[1]               资源
         // a[2]               评论
         // a[3]               图片
         this.content = a.data[0].content;
