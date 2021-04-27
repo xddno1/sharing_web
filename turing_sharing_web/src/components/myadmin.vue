@@ -9,7 +9,7 @@
     <a-table :columns="usercolumns" :data-source="alluser" rowKey="id">
     </a-table>
 
-    <!-- <div class="pages">
+    <div class="pages">
       <h1>图片上传</h1>
       <div>
         <span>请输入文章id</span>
@@ -85,7 +85,7 @@
           <input type="text" v-model="itemid" />
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
