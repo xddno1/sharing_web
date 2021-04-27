@@ -1,20 +1,12 @@
 <template>
   <div class="myadmin">
-    <button @click="getbox">获取所有文章</button>
-    <a-table :columns="itemscolumns" :data-source="allitems">
+    <a-table :columns="itemscolumns" :data-source="allitems" rowKey="id">
       <template slot="edit" slot-scope="text">
-        <a-icon type="delete" class="deletebtn" @click="deletitem(text)" />
+        <a-icon type="delete" class="btn deletebtn" @click="deletitem(text)" />
+        <a-icon type="edit" class="btn editbtn" @click="edititem(text)" />
       </template>
     </a-table>
-    <button @click="getalluser">获取所有用户</button>
-    <a-table :columns="usercolumns" :data-source="alluser">
-      <div slot="edit">
-        <span>edit</span>
-      </div>
-    </a-table>
-
-    <a-table :columns="columns" :data-source="data">
-      <a slot="name" slot-scope="text">{{ text }}</a>
+    <a-table :columns="usercolumns" :data-source="alluser" rowKey="id">
     </a-table>
 
     <!-- <div class="pages">
@@ -98,69 +90,6 @@
 </template>
 
 <script>
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    scopedSlots: { customRender: "name" },
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-    width: 80,
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address 1",
-    ellipsis: true,
-  },
-  {
-    title: "Long Column Long Column Long Column",
-    dataIndex: "address",
-    key: "address 2",
-    ellipsis: true,
-  },
-  {
-    title: "Long Column Long Column",
-    dataIndex: "address",
-    key: "address 3",
-    ellipsis: true,
-  },
-  {
-    title: "Long Column",
-    dataIndex: "address",
-    key: "address 4",
-    ellipsis: true,
-  },
-];
-
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park, New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 2 Lake Park, London No. 2 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park, Sidney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
-
 import axios from "axios";
 export default {
   name: "myadmin",
@@ -182,7 +111,7 @@ export default {
         {
           title: "operation",
           dataIndex: "id",
-          key: "edit",
+          key: "id",
           scopedSlots: { customRender: "edit" },
         },
       ],
@@ -202,12 +131,6 @@ export default {
           dataIndex: "password",
           key: "userPassword",
         },
-        {
-          title: "operation",
-          dataIndex: "edit",
-          key: "edit",
-          scopedSlots: { customRender: "edit" },
-        },
       ],
       file: null,
       myname: "",
@@ -220,8 +143,6 @@ export default {
       itemid: "",
       updateitemtitle: "",
       updateitemcontent: "",
-      data: data,
-      columns: columns,
     };
   },
   methods: {
@@ -288,7 +209,6 @@ export default {
       }).then((e) => {
         this.$message.success("获取成功！");
         this.alluser = e.data;
-        console.log(e);
       });
     },
     getitem() {
@@ -302,11 +222,8 @@ export default {
         // e[0].content       内容
         // e[0].time          时间
         // e[0].title         标题
-        console.log(e.data);
-        console.log(e.data[0]);
         this.updateitemtitle = e.data[0].title;
         this.updateitemcontent = e.data[0].content;
-        console.log(e);
       });
     },
     updateitem() {
@@ -358,38 +275,45 @@ export default {
     },
   },
   created() {
-    console.log(this.$store.state.loginstate.admintoken);
     if (!this.$store.state.loginstate.admintoken) {
       this.$message.error("请使用管理员登录！");
       this.$router.replace({
         name: "index",
       });
+    } else {
+      this.getbox();
+      this.getalluser();
     }
   },
 };
 </script>
 
 <style>
-.deletebtn {
+.btn {
   cursor: pointer;
+}
+.deletebtn {
   color: red;
 }
-.deletebtn :hover {
-  animation-name: deletebtnhover;
+.editbtn {
+  color: dodgerblue;
+}
+.btn :hover {
+  animation-name: btnhover;
   animation-duration: 0.1s;
   animation-fill-mode: forwards;
 }
-.deletebtn :active {
-  animation-name: deletebtnactive;
+.btn :active {
+  animation-name: btnactive;
   animation-duration: 0.1s;
 }
-@keyframes deletebtnhover {
+@keyframes btnhover {
   to {
     width: 120%;
     height: 120%;
   }
 }
-@keyframes deletebtnactive {
+@keyframes btnactive {
   to {
     width: 90%;
     height: 90%;
