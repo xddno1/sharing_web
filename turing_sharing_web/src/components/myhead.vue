@@ -204,6 +204,7 @@ export default {
 
 <style>
 .myhead {
+  z-index: 100;
   background-color: pink;
   position: fixed;
   height: 50px;

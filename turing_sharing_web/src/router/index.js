@@ -5,6 +5,7 @@ Vue.use(Router);
 const index = () => import("@/components/myindex");
 const item = () => import("@/components/myitem");
 const admin = () => import("@/components/myadmin");
+const edititem = () => import("@/components/myedititem");
 export default new Router({
   routes: [
     {
@@ -26,6 +27,11 @@ export default new Router({
       path: "/admin",
       name: "admin",
       component: admin
+    },
+    {
+      path: "/edititem",
+      name: "edititem",
+      component: edititem
     }
   ]
 });

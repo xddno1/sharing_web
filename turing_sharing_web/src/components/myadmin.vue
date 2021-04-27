@@ -2,7 +2,15 @@
   <div class="myadmin">
     <a-table :columns="itemscolumns" :data-source="allitems" rowKey="id">
       <template slot="edit" slot-scope="text">
-        <a-icon type="delete" class="btn deletebtn" @click="deletitem(text)" />
+        <a-popconfirm
+          title="Are you sure delete this task?"
+          ok-text="Yes"
+          cancel-text="No"
+          @confirm="deletitem(text)"
+        >
+          <a-icon type="delete" class="btn deletebtn" />
+        </a-popconfirm>
+
         <a-icon type="edit" class="btn editbtn" @click="edititem(text)" />
       </template>
     </a-table>
@@ -91,6 +99,7 @@
 
 <script>
 import axios from "axios";
+
 export default {
   name: "myadmin",
   components: {},
@@ -272,6 +281,15 @@ export default {
         this.$message.success("删除成功！");
         this.getbox();
       });
+    },
+    edititem(e) {
+      this.$router.push({
+        name: "edititem",
+        query: {
+          item: e,
+        },
+      });
+      console.log(e);
     },
   },
   created() {

@@ -1,6 +1,6 @@
 <template>
   <div class="myindex">
-    <div class="pages">
+    <div class="pages" v-if="maxpage != 0">
       <mybox
         v-for="(item, index) in boxdata"
         :key="index"
@@ -10,7 +10,7 @@
       <span v-if="havepre" class="changepagebtn" @click="changepagefunc('-')"
         ><a-icon type="left" />上一页</span
       >
-      <span class="showpagecount">{{ pageNo }} / {{ maxpage }}</span>
+      <span class="showpagecount">{{ pageNo }} / 共 {{ maxpage }} 页</span>
       <span v-if="havenext" class="changepagebtn" @click="changepagefunc('+')"
         >下一页<a-icon type="right"
       /></span>
