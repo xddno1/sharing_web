@@ -8,11 +8,32 @@
     <div>
       <span class="my-edit-item-content">内容</span> <input v-model="content" />
     </div>
-    <div v-for="(item, index) in pictures" :key="index">
+
+    <div class="clearfix">
+      <a-upload
+        list-type="picture-card"
+        :file-list="fileList"
+        @preview="handlePreview"
+        @change="handleChange"
+      >
+        <div v-if="fileList.length < 8">
+          <a-icon type="plus" />
+          <div class="ant-upload-text">添加图片</div>
+        </div>
+      </a-upload>
+      <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+        <img alt="example" style="width: 100%" :src="previewImage" />
+      </a-modal>
+    </div>
+    <div
+      class="my-edit-item-showimg-eara"
+      v-for="(item, index) in pictures"
+      :key="index"
+    >
       <img
         class="my-edit-item-showimg"
         :src="'data:image/png;base64,' + item"
-      />
+      /><a-icon type="close-circle" class="my-edit-item-showimg-btn" />
     </div>
     <div>
       <span
@@ -56,6 +77,18 @@ export default {
       pictures: [],
       mycomment: "",
       addcomment: "",
+
+      previewVisible: false,
+      previewImage: "",
+      fileList: [
+        {
+          uid: "-1",
+          name: "image.png",
+          status: "done",
+          url:
+            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+        },
+      ],
     };
   },
   methods: {
@@ -90,6 +123,19 @@ export default {
             });
         });
       }
+    },
+    handleCancel() {
+      this.previewVisible = false;
+    },
+    async handlePreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    handleChange({ fileList }) {
+      this.fileList = fileList;
     },
   },
   created() {
@@ -131,10 +177,32 @@ export default {
   float: right;
   line-height: 60px;
 }
+.my-edit-item-showimg-eara {
+  margin-top: 20px;
+  width: 20%;
+  position: relative;
+}
 .my-edit-item-showimg {
   width: 100%;
 }
+.my-edit-item-showimg-btn {
+  position: absolute;
+  left: calc(100% - 7px);
+  top: -7px;
+  cursor: pointer;
+  color: red;
+}
 .my-edit-item-resource {
   cursor: pointer;
+}
+
+.ant-upload-select-picture-card i {
+  font-size: 32px;
+  color: #999;
+}
+
+.ant-upload-select-picture-card .ant-upload-text {
+  margin-top: 8px;
+  color: #666;
 }
 </style>
