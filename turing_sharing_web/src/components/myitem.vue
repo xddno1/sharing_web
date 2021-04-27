@@ -116,7 +116,7 @@ export default {
       )
       .then((a) => {
         // a[0].content       内容
-        // a[0].time          时间
+        // a[0].time          时间$store
         // a[0].title         标题
         // a[1]               资源
         // a[2]               评论

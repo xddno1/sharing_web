@@ -11,7 +11,8 @@ Vue.config.productionTip = false;
 
 const store = new Vuex.Store({
   state: {
-    loginstate: {}
+    loginstate: {},
+    maxpage: {}
   },
   mutations: {
     upDateToken(state, data) {

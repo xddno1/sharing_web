@@ -33,7 +33,9 @@ export default {
         )
         .then((a) => {
           if (a.data.length != 0) {
+            this.ItemCount = a.data.passageItemCount;
             this.boxdata = a.data.passageItem;
+            this.$store.state.maxpage = a.data.passageItemCount;
           } else {
             this.$message.error("后面没有啦 T_T");
           }
@@ -60,18 +62,7 @@ export default {
     },
   },
   created() {
-    // getbox函数，因为在created的时候函数还没有加载，不能直接调用函数
-    ///////////////////////////////////////////////////////////////////////////////////
-    axios
-      .get(
-        `http://121.4.187.232:8080/passage/queryAllPassage?pageNo=${this.pageNo}&pageSize=5`
-      )
-      .then((a) => {
-        console.log(a);
-        this.ItemCount = a.data.passageItemCount;
-        this.boxdata = a.data.passageItem;
-      });
-    ///////////////////////////////////////////////////////////////////////////////////
+    this.getbox();
   },
 };
 </script>
