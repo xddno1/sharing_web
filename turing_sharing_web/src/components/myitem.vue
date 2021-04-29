@@ -24,7 +24,7 @@
       :commentboxitem="item"
     ></mycommentbox>
     <div>
-      <div>我也要评论:</div>
+      <div>我也来说一句:</div>
       <a-input v-model="addcomment"></a-input>
       <a-button
         style="margin-right: 10px; float: right"
