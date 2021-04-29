@@ -18,11 +18,7 @@
         >资源{{ index + 1 }}</span
       >
     </div>
-    <mycommentbox
-      v-for="(item, index) in mycomment"
-      :key="index"
-      :commentboxitem="item"
-    ></mycommentbox>
+
     <div>
       <div>我也来说一句:</div>
       <a-input v-model="addcomment"></a-input>
@@ -34,9 +30,11 @@
         评论
       </a-button>
     </div>
-    <div v-for="(item, index) in comments" :key="index">
-      <span>{{ item.content }}</span>
-    </div>
+    <mycommentbox
+      v-for="(item, index) in comments"
+      :key="index"
+      :commentboxitem="item"
+    ></mycommentbox>
   </div>
 </template>
 
