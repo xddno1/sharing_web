@@ -24,7 +24,6 @@ export default {
           item: this.boxitem.id,
         },
       });
-      console.log(this.boxitem.id);
     },
   },
 };

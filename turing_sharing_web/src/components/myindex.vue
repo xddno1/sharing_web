@@ -20,17 +20,17 @@
         <span class="n-and-c-title">公告</span>
         <span class="notice">{{ notice }}</span>
       </div>
-      <div class="hall-comment">
-        <span class="n-and-c-title">大厅评论</span>
+      <span class="n-and-c-title">大厅评论</span>
+      <div class="hall-comment style-7">
         <mycommentbox
           v-for="(item, index) in hallcommentdata"
           :key="index"
           :commentboxitem="item"
         ></mycommentbox>
-        <div><span>我也来说一句：</span></div>
-        <input type="text" v-model="mycomment" />
-        <button @click="addhallcomment">发表</button>
       </div>
+      <div><span>我也来说一句：</span></div>
+      <input type="text" v-model="mycomment" />
+      <button @click="addhallcomment">发表</button>
     </div>
   </div>
 </template>
@@ -61,6 +61,12 @@ export default {
         .then((a) => {
           if (a.data.length != 0) {
             this.ItemCount = a.data.passageItemCount;
+
+            for (let i in a.data.passageItem) {
+              a.data.passageItem[i].time = a.data.passageItem[i].time.split(
+                "T"
+              )[0];
+            }
             this.boxdata = a.data.passageItem;
             this.$store.state.maxpage = a.data.passageItemCount;
           } else {
@@ -77,19 +83,26 @@ export default {
       axios
         .get(`http://121.4.187.232:8080/hallComment/queryAllHallComment`)
         .then((a) => {
+          for (let i in a.data) {
+            a.data[i].time = a.data[i].time.split("T")[0];
+          }
           this.hallcommentdata = a.data;
         });
     },
     addhallcomment() {
-      axios
-        .post(
-          `http://121.4.187.232:8080/hallComment/createHallComment?content=${this.mycomment}`
-        )
-        .then((a) => {
-          this.$message.success("评论成功！！");
-          this.mycomment = "";
-          gethallcomment();
-        });
+      if (this.mycomment == "") {
+        this.$message.error("请输入内容ToT");
+      } else {
+        axios
+          .post(
+            `http://121.4.187.232:8080/hallComment/createHallComment?content=${this.mycomment}`
+          )
+          .then((a) => {
+            this.$message.success("评论成功！！");
+            this.mycomment = "";
+            this.gethallcomment();
+          });
+      }
     },
     changepagefunc(changeway) {
       if (changeway == "+") {
@@ -152,5 +165,29 @@ export default {
   width: 300px;
   height: 750px;
   background-color: pink;
+  overflow-y: scroll;
+}
+
+.style-7::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+  border-radius: 2px;
+}
+
+.style-7::-webkit-scrollbar {
+  width: 2px;
+  background-color: #f5f5f5;
+}
+
+.style-7::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0.44, rgb(122, 153, 217)),
+    color-stop(0.72, rgb(73, 125, 189)),
+    color-stop(0.86, rgb(28, 58, 148))
+  );
 }
 </style>

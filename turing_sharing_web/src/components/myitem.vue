@@ -6,7 +6,7 @@
     </div>
 
     <div>{{ content }}</div>
-    <div v-for="(item, index) in pictures" :key="index">
+    <div v-for="item in pictures" :key="item">
       <img class="my-item-showimg" :src="'data:image/png;base64,' + item" />
     </div>
     <div>
@@ -18,6 +18,11 @@
         >资源{{ index + 1 }}</span
       >
     </div>
+    <mycommentbox
+      v-for="(item, index) in mycomment"
+      :key="index"
+      :commentboxitem="item"
+    ></mycommentbox>
     <div>
       <div>我也要评论:</div>
       <a-input v-model="addcomment"></a-input>
@@ -37,9 +42,10 @@
 
 <script>
 import axios from "axios";
+import mycommentbox from "./mycommentbox";
 export default {
   name: "mypage",
-  components: {},
+  components: { mycommentbox },
   data() {
     return {
       pageid: "",
@@ -80,7 +86,6 @@ export default {
       ) {
         this.$message.error("请先登录");
       } else {
-        console.log(this);
         axios({
           method: "post",
           url: `http://121.4.187.232:8080/comment/createComment?content=${this.addcomment}&passageID=${this.pageid}&userID=${this.$store.state.loginstate.userid}`,
@@ -97,7 +102,6 @@ export default {
             .then((e) => {
               this.$message.success("获取评论成功");
               this.comments = e.data;
-              console.log(e);
             })
             .catch((e) => {
               this.$message.error("获取评论失败！");
@@ -107,8 +111,6 @@ export default {
     },
   },
   created() {
-    console.log(this.$store.state.loginstate.usertoken);
-    console.log(this.$store.state.loginstate.userid);
     this.pageid = this.$route.query.item;
     axios
       .get(
@@ -119,14 +121,14 @@ export default {
         // a[0].time          时间$store
         // a[0].title         标题
         // a[1]               资源
-        // a[2]               评论
-        // a[3]               图片
+        // a[3]               评论
+        // a[2]               图片
         this.content = a.data[0].content;
-        this.time = a.data[0].time;
+        this.time = a.data[0].time.split("T")[0];
         this.title = a.data[0].title;
         this.resources = a.data[1];
-        this.comments = a.data[2];
-        this.pictures = a.data[3];
+        this.comments = a.data[3];
+        this.pictures = a.data[2];
       });
   },
 };

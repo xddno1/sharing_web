@@ -14,7 +14,11 @@
         <a-icon type="edit" class="btn editbtn" @click="edititem(text)" />
       </template>
     </a-table>
-    <a-table :columns="usercolumns" :data-source="alluser" rowKey="id">
+    <a-table
+      :columns="hallcommentcolumns"
+      :data-source="allhallcomment"
+      rowKey="id"
+    >
     </a-table>
 
     <div class="pages">
@@ -53,19 +57,7 @@
       </div>
       <button @click="creatitem">创建</button>
     </div>
-    <div>
-      <h1>获取用户信息</h1>
-      <div>
-        <button @click="getalluser">获取所有用户</button>
-        <button @click="alluser = []">清除</button>
-      </div>
 
-      <div v-for="(item, index) in alluser" :key="index">
-        <span>{{ item.userId }}--</span>
-        <span>{{ item.username }}--</span>
-        <span>{{ item.password }}</span>
-      </div>
-    </div>
     <div>
       <h1>更新文章</h1>
       <div>
@@ -124,7 +116,7 @@ export default {
           scopedSlots: { customRender: "edit" },
         },
       ],
-      usercolumns: [
+      hallcommentcolumns: [
         {
           title: "userId",
           dataIndex: "userId",
@@ -147,7 +139,7 @@ export default {
       resourcepassageid: "",
       newitemtitle: "",
       newitemcontent: "",
-      alluser: [],
+      allhallcomment: [],
       allitems: [],
       itemid: "",
       updateitemtitle: "",
@@ -207,17 +199,15 @@ export default {
         this.newitemtitle = "";
       });
     },
-    getalluser() {
+    getallhallcomment() {
       //121.4.187.232:8080/admin/queryAllUser
       axios({
-        method: "post",
-        url: ` http://121.4.187.232:8080/admin/queryAllUser`,
-        headers: {
-          token: this.$store.state.loginstate.admintoken,
-        },
+        method: "get",
+        url: ` http://121.4.187.232:8080/hallComment/queryAllHallComment`,
       }).then((e) => {
         this.$message.success("获取成功！");
-        this.alluser = e.data;
+
+        this.allhallcomment = e.data;
       });
     },
     getitem() {
@@ -270,18 +260,6 @@ export default {
         this.getbox();
       });
     },
-    deletitem(e) {
-      axios({
-        method: "post",
-        url: `http://121.4.187.232:8080/admin/deletePassage?passageID=${e}`,
-        headers: {
-          token: this.$store.state.loginstate.admintoken,
-        },
-      }).then((e) => {
-        this.$message.success("删除成功！");
-        this.getbox();
-      });
-    },
     edititem(e) {
       this.$router.push({
         name: "edititem",
@@ -289,7 +267,6 @@ export default {
           item: e,
         },
       });
-      console.log(e);
     },
   },
   created() {
@@ -300,7 +277,7 @@ export default {
       });
     } else {
       this.getbox();
-      this.getalluser();
+      this.getallhallcomment();
     }
   },
 };

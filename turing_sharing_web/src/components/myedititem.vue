@@ -12,11 +12,12 @@
     <div class="clearfix">
       <a-upload
         list-type="picture-card"
-        :file-list="fileList"
+        :beforeUpload="cutupload"
+        :file-list="filelist"
         @preview="handlePreview"
         @change="handleChange"
       >
-        <div v-if="fileList.length < 8">
+        <div v-if="filelist.length < 8">
           <a-icon type="plus" />
           <div class="ant-upload-text">添加图片</div>
         </div>
@@ -25,16 +26,7 @@
         <img alt="example" style="width: 100%" :src="previewImage" />
       </a-modal>
     </div>
-    <div
-      class="my-edit-item-showimg-eara"
-      v-for="(item, index) in pictures"
-      :key="index"
-    >
-      <img
-        class="my-edit-item-showimg"
-        :src="'data:image/png;base64,' + item"
-      /><a-icon type="close-circle" class="my-edit-item-showimg-btn" />
-    </div>
+
     <div>
       <span
         v-for="(item, index) in resources"
@@ -43,6 +35,12 @@
         @click="downloadresource(index)"
         >资源{{ index + 1 }}</span
       >
+    </div>
+    <div>
+      <!-- <a-tag v-for="item in comments" closable @close="" :key="item">
+        {{ item }}
+      </a-tag>
+      <a-tag closable @close=""> Tag 2 </a-tag> -->
     </div>
     <div>
       <div>我也要评论:</div>
@@ -74,21 +72,11 @@ export default {
       time: "",
       resources: [],
       comments: [],
-      pictures: [],
+      filelist: [],
       mycomment: "",
       addcomment: "",
-
       previewVisible: false,
       previewImage: "",
-      fileList: [
-        {
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          url:
-            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-        },
-      ],
     };
   },
   methods: {
@@ -135,12 +123,44 @@ export default {
       this.previewVisible = true;
     },
     handleChange({ fileList }) {
-      this.fileList = fileList;
+      this.filelist = fileList;
+      console.log(this.filelist);
+    },
+    base64ToBlob({ b64data = "", contentType = "", sliceSize = 512 } = {}) {
+      return new Promise((resolve, reject) => {
+        // 使用 atob() 方法将数据解码
+        let byteCharacters = atob(b64data);
+        let byteArrays = [];
+        for (
+          let offset = 0;
+          offset < byteCharacters.length;
+          offset += sliceSize
+        ) {
+          let slice = byteCharacters.slice(offset, offset + sliceSize);
+          let byteNumbers = [];
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers.push(slice.charCodeAt(i));
+          }
+          // 8 位无符号整数值的类型化数组。内容将初始化为 0。
+          // 如果无法分配请求数目的字节，则将引发异常。
+          byteArrays.push(new Uint8Array(byteNumbers));
+        }
+        let result = new Blob(byteArrays, {
+          type: contentType,
+        });
+        result = Object.assign(result, {
+          // 这里一定要处理一下 URL.createObjectURL
+          preview: URL.createObjectURL(result),
+          name: `XXX.png`,
+        });
+        resolve(result);
+      });
+    },
+    cutupload() {
+      return false;
     },
   },
   created() {
-    console.log(this.$store.state.loginstate.usertoken);
-    console.log(this.$store.state.loginstate.userid);
     this.pageid = this.$route.query.item;
     axios
       .get(
@@ -157,8 +177,22 @@ export default {
         this.time = a.data[0].time;
         this.title = a.data[0].title;
         this.resources = a.data[1];
-        this.comments = a.data[2];
-        this.pictures = a.data[3];
+        this.comments = a.data[3];
+        for (let i in a.data[2]) {
+          this.base64ToBlob({
+            b64data: a.data[2][i],
+            contentType: "image/png",
+          }).then((res) => {
+            // 转换后的blob对象
+            console.log(res);
+            this.filelist.push({
+              uid: "-" + i,
+              name: "a picture",
+              status: "done",
+              url: res.preview,
+            });
+          });
+        }
       });
   },
 };
