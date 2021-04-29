@@ -7,7 +7,9 @@
       <span v-else class="my-commentbox-title">{{
         commentboxitem.username
       }}</span>
-      <span class="my-commentbox-time"> {{ commentboxitem.time }}</span>
+      <span class="my-commentbox-time">
+        {{ commentboxitem.time.split("T")[0] }}</span
+      >
     </div>
     <span class="my-commentbox-describe">{{ commentboxitem.content }} </span>
   </div>
@@ -29,22 +31,24 @@ export default {
 .mycommentbox {
   border: 2px solid pink;
   width: 100%;
-  height: 100px;
   flex-direction: column;
   padding: 10px 25px;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 .my-commentbox-title {
   margin-right: 5px;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 13px;
+  color: #666;
+}
+.my-commentbox-time {
+  font-size: 13px;
+  color: #666;
 }
 
 .my-commentbox-describe {
-  font-size: 13px;
-  color: #666;
+  font-size: 15px;
+  font-weight: 400;
   display: flex;
-  height: 140px;
   overflow: hidden;
 }
 </style>

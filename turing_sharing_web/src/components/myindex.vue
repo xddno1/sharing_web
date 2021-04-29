@@ -28,9 +28,20 @@
           :commentboxitem="item"
         ></mycommentbox>
       </div>
-      <div><span>我也来说一句：</span></div>
-      <input type="text" v-model="mycomment" />
-      <button @click="addhallcomment">发表</button>
+      <div class="my-hallcomment-parent">
+        <a-textarea
+          class="my-hallcomment-text"
+          v-model="mycomment"
+          placeholder="我也来说一句. . ."
+          auto-size
+        />
+        <a-button
+          class="my-hallcomment-btn"
+          type="primary"
+          @click="addhallcomment"
+          >发表</a-button
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -159,9 +170,15 @@ export default {
 
 .hall-comment {
   width: 300px;
-  height: 750px;
+  max-height: 750px;
   background-color: pink;
   overflow-y: scroll;
+}
+.my-hallcomment-parent {
+  display: flex;
+}
+.my-hallcomment-text {
+  margin-right: 5px;
 }
 
 .style-7::-webkit-scrollbar-track {

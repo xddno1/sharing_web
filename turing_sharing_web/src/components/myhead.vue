@@ -3,12 +3,13 @@
     <div class="headcontianer">
       <div class="welcome">
         <span>欢迎光临</span>
-        <span>我们一直在努力</span>
       </div>
 
-      <span v-if="token == ''" class="login" @click="showModal">请登录</span>
+      <span v-if="token == ''" class="login" @click="showModal"
+        >Hi, 请登录</span
+      >
       <a-dropdown v-else>
-        <span class="login">您好，{{ this.userform.name }}</span>
+        <span class="login">Hi, {{ this.userform.name }}</span>
         <a-menu slot="overlay" @click="unlogin">
           <a-menu-item key="1"> 退出登录 </a-menu-item>
         </a-menu>

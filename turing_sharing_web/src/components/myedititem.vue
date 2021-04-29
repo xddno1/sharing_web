@@ -1,5 +1,5 @@
 <template>
-  <div class="mypage contianer">
+  <div class="mypage contianer" v-if="title">
     <div>
       <span class="my-edit-item-title">标题</span>
       <input v-model="title" />
@@ -42,28 +42,36 @@
       </a-tag>
       <a-tag closable @close=""> Tag 2 </a-tag> -->
     </div>
-    <div>
-      <div>我也要评论:</div>
-      <a-input v-model="addcomment"></a-input>
+
+    <div class="my-edit-item-my-comment">
+      <a-textarea
+        class="my-edit-item-my-comment-text"
+        v-model="addcomment"
+        placeholder="我也来说一句. . ."
+        auto-size
+      ></a-textarea>
       <a-button
-        style="margin-right: 10px; float: right"
+        class="my-edit-item-my-comment-btn"
         type="primary"
         @click="commentsubmit"
       >
         评论
       </a-button>
     </div>
-    <div v-for="(item, index) in comments" :key="index">
-      <span>{{ item.content }}</span>
-    </div>
+    <mycommentbox
+      v-for="(item, index) in comments"
+      :key="index"
+      :commentboxitem="item"
+    ></mycommentbox>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import mycommentbox from "./mycommentbox";
 export default {
   name: "myedititem",
-  components: {},
+  components: { mycommentbox },
   data() {
     return {
       pageid: "",
@@ -75,6 +83,7 @@ export default {
       filelist: [],
       mycomment: "",
       addcomment: "",
+
       previewVisible: false,
       previewImage: "",
     };
@@ -162,11 +171,13 @@ export default {
   },
   created() {
     this.pageid = this.$route.query.item;
+    let hideloading = this.$message.loading("资源加载中，请稍后..", 0);
     axios
       .get(
         ` http://121.4.187.232:8080/passage/passageResources?passageID=${this.pageid}`
       )
       .then((a) => {
+        hideloading();
         // a[0].content       内容
         // a[0].time          时间$store
         // a[0].title         标题
@@ -193,6 +204,10 @@ export default {
             });
           });
         }
+      })
+      .catch(() => {
+        hideloading();
+        this.$message.error("好像网络不怎么好呢..", 6000);
       });
   },
 };
@@ -228,6 +243,13 @@ export default {
 }
 .my-edit-item-resource {
   cursor: pointer;
+}
+
+.my-edit-item-my-comment {
+  display: flex;
+}
+.my-edit-item-my-comment .my-edit-item-my-comment-text {
+  margin-right: 10px;
 }
 
 .ant-upload-select-picture-card i {

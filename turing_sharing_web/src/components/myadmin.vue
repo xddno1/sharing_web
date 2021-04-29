@@ -3,7 +3,7 @@
     <a-table :columns="itemscolumns" :data-source="allitems" rowKey="id">
       <template slot="edit" slot-scope="text">
         <a-popconfirm
-          title="Are you sure delete this task?"
+          title="主人您确认要删除我嘛？ToT"
           ok-text="Yes"
           cancel-text="No"
           @confirm="deletitem(text)"
@@ -19,6 +19,16 @@
       :data-source="allhallcomment"
       rowKey="id"
     >
+      <template slot="edit" slot-scope="text">
+        <a-popconfirm
+          title="主人您确认要删除我嘛？ToT"
+          ok-text="Yes"
+          cancel-text="No"
+          @confirm="delethallcomment(text)"
+        >
+          <a-icon type="delete" class="btn deletebtn" />
+        </a-popconfirm>
+      </template>
     </a-table>
 
     <div class="pages">
@@ -118,19 +128,25 @@ export default {
       ],
       hallcommentcolumns: [
         {
-          title: "userId",
-          dataIndex: "userId",
-          key: "userId",
+          title: "Id",
+          dataIndex: "id",
+          key: "hallcommentId",
         },
         {
-          title: "userName",
-          dataIndex: "username",
-          key: "userName",
+          title: "Content",
+          dataIndex: "content",
+          key: "hallcommentcontent",
         },
         {
-          title: "userPassword",
-          dataIndex: "password",
-          key: "userPassword",
+          title: "Time",
+          dataIndex: "time",
+          key: "hallcommenttime",
+        },
+        {
+          title: "operation",
+          dataIndex: "id",
+          key: "id",
+          scopedSlots: { customRender: "edit" },
         },
       ],
       file: null,
@@ -149,11 +165,8 @@ export default {
   methods: {
     uploadimg() {
       let formData = new FormData();
-      console.log(formData);
       formData.append("passageID", this.imgpassageid);
-      console.log(formData.get("passageID"));
       formData.append("file", this.$refs.imgfile.files[0]);
-      console.log(formData.get("file"));
       axios({
         method: "post",
         url: "http://121.4.187.232:8080/admin/uploadImg",
@@ -168,12 +181,9 @@ export default {
     },
     uploadresource() {
       let formData = new FormData();
-      console.log(formData);
       formData.append("passageID", this.resourcepassageid);
-      console.log(formData.get("passageID"));
       formData.append("file", this.$refs.resourcefile.files[0]);
       formData.append("file", this.$refs.resourcefile.files[0]);
-      console.log(formData.getAll("file"));
       axios({
         method: "post",
         url: "http://121.4.187.232:8080/admin/uploadResources",
@@ -208,6 +218,19 @@ export default {
         this.$message.success("获取成功！");
 
         this.allhallcomment = e.data;
+        console.log(this.allhallcomment);
+      });
+    },
+    delethallcomment(e) {
+      axios({
+        method: "post",
+        url: `http://121.4.187.232:8080/admin/deleteHallComment?ID=${e}`,
+        headers: {
+          token: this.$store.state.loginstate.admintoken,
+        },
+      }).then((e) => {
+        this.$message.success("删除成功！");
+        this.getallhallcomment();
       });
     },
     getitem() {
@@ -244,7 +267,6 @@ export default {
           `http://121.4.187.232:8080/passage/queryAllPassage?pageNo=${this.pageNo}&pageSize=${this.$store.state.maxpage}`
         )
         .then((e) => {
-          console.log(e.data.passageItem);
           this.allitems = e.data.passageItem;
         });
     },
