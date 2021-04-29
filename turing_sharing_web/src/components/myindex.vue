@@ -133,9 +133,6 @@ export default {
 </script>
 
 <style>
-.myindex {
-  /* flex-direction: row; */
-}
 .changepagebtn {
   cursor: pointer;
 }
@@ -159,8 +156,7 @@ export default {
   font-weight: 700;
   display: block;
 }
-.notice-box .notice {
-}
+
 .hall-comment {
   width: 300px;
   height: 750px;
@@ -169,7 +165,7 @@ export default {
 }
 
 .style-7::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #f5f5f5;
   border-radius: 2px;
 }
