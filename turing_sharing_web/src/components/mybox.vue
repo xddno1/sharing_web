@@ -33,12 +33,13 @@ export default {
 
 <style>
 .mybox {
-  border: 2px solid pink;
+  border: #e9e9e9 2px solid;
   width: 100%;
   height: 200px;
   flex-direction: column;
   padding: 10px 25px;
   margin-bottom: 20px;
+  background-color: #fff;
 }
 .my-box-title {
   font-size: 30px;

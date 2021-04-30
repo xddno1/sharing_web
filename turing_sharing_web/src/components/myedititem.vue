@@ -1,15 +1,17 @@
 <template>
   <div class="mypage contianer" v-if="title">
-    <div>
+    <div class="my-edit-item-title-parent">
       <span class="my-edit-item-title">标题</span>
-      <input v-model="title" />
+      <a-textarea class="my-edit-item-input" v-model="title" auto-size />
     </div>
 
-    <div>
-      <span class="my-edit-item-content">内容</span> <input v-model="content" />
+    <div class="my-edit-item-content-parent">
+      <span class="my-edit-item-title">内容</span>
+      <a-textarea v-model="content" class="my-edit-item-input" auto-size />
     </div>
 
-    <div class="clearfix">
+    <div class="clearfix my-edit-item-picture">
+      <span class="my-edit-item-title">图片</span>
       <a-upload
         list-type="picture-card"
         :beforeUpload="cutupload"
@@ -27,14 +29,23 @@
       </a-modal>
     </div>
 
-    <div>
+    <div class="my-edit-item-resource-parent">
+      <span class="my-edit-item-title">资源</span>
       <span
         v-for="(item, index) in resources"
         :key="index"
         class="my-edit-item-resource"
         @click="downloadresource(index)"
-        >资源{{ index + 1 }}</span
       >
+        <span class="my-edit-item-resource-title">资源{{ index + 1 }}:</span>
+        <a-tag
+          >{{ item.address.split("/")[4] }}
+          <a-icon type="delete" class="btn deletebtn" /></a-tag
+      ></span>
+      <span class="my-edit-item-resource-title">添加资源：</span>
+      <a-tag class="my-edit-item-resource-add-btn"
+        >添加 <a-icon type="plus" class="addbtn"
+      /></a-tag>
     </div>
     <div>
       <!-- <a-tag v-for="item in comments" closable @close="" :key="item">
@@ -42,7 +53,7 @@
       </a-tag>
       <a-tag closable @close=""> Tag 2 </a-tag> -->
     </div>
-
+    <span class="my-edit-item-title">评论</span>
     <div class="my-edit-item-my-comment">
       <a-textarea
         class="my-edit-item-my-comment-text"
@@ -63,6 +74,9 @@
       :key="index"
       :commentboxitem="item"
     ></mycommentbox>
+    <div class="my-edit-item-btn-parent">
+      <a-button class="my-edit-item-btn" type="primary">修改</a-button>
+    </div>
   </div>
 </template>
 
@@ -178,6 +192,7 @@ export default {
       )
       .then((a) => {
         hideloading();
+        console.log(a);
         // a[0].content       内容
         // a[0].time          时间$store
         // a[0].title         标题
@@ -215,37 +230,59 @@ export default {
 
 <style>
 .mypage {
-  background-color: pink;
+  background-color: #f6f6f6;
+}
+.mypage .my-edit-item-title {
 }
 .my-edit-item-title {
   font-size: 30px;
   font-weight: 600;
   line-height: 60px;
 }
-.my-edit-item-time {
-  float: right;
-  line-height: 60px;
+
+.my-edit-item-title-parent {
+  margin-bottom: 70px;
 }
-.my-edit-item-showimg-eara {
-  margin-top: 20px;
-  width: 20%;
-  position: relative;
+
+.my-edit-item-title-parent .my-edit-item-input {
+  display: block;
 }
-.my-edit-item-showimg {
-  width: 100%;
+
+.my-edit-item-content-parent {
+  margin-bottom: 70px;
 }
-.my-edit-item-showimg-btn {
-  position: absolute;
-  left: calc(100% - 7px);
-  top: -7px;
-  cursor: pointer;
-  color: red;
+
+.my-edit-item-content-parent .my-edit-item-input {
+  display: block;
+}
+
+.my-edit-item-picture {
+  margin-bottom: 70px;
+}
+
+.my-edit-item-resource-parent {
+  margin-bottom: 70px;
 }
 .my-edit-item-resource {
+  cursor: pointer;
+  display: block;
+  color: #4181c4;
+  margin-bottom: 5px;
+}
+.my-edit-item-resource:hover {
+  color: #ff5e52;
+}
+
+.my-edit-item-resource-title {
+  font-weight: 600;
+  color: #444;
+}
+.my-edit-item-resource-add-btn {
   cursor: pointer;
 }
 
 .my-edit-item-my-comment {
+  margin-bottom: 20px;
   display: flex;
 }
 .my-edit-item-my-comment .my-edit-item-my-comment-text {
@@ -260,5 +297,14 @@ export default {
 .ant-upload-select-picture-card .ant-upload-text {
   margin-top: 8px;
   color: #666;
+}
+
+.my-edit-item-btn-parent {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.my-edit-item-btn-parent .my-edit-item-btn {
+  margin-top: 10px;
+  margin-bottom: 30px;
 }
 </style>

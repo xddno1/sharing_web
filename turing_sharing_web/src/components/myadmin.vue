@@ -216,7 +216,6 @@ export default {
         url: ` http://121.4.187.232:8080/hallComment/queryAllHallComment`,
       }).then((e) => {
         this.$message.success("获取成功！");
-        console.log(e.data);
         for (let i in e.data) {
           e.data[i].time = e.data[i].time.replace("T", "  ").split(".")[0];
         }

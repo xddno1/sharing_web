@@ -130,6 +130,7 @@ export default {
         ` http://121.4.187.232:8080/passage/passageResources?passageID=${this.pageid}`
       )
       .then((a) => {
+        console.log(a);
         hideloading();
         // a[0].content       内容
         // a[0].time          时间$store
@@ -154,7 +155,7 @@ export default {
 
 <style>
 .mypage {
-  background-color: pink;
+  border: #e9e9e9 2px solid;
 }
 
 .my-item-title-parent {

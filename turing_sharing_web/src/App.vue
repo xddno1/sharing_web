@@ -18,9 +18,10 @@ export default {
 <style>
 .contianer {
   padding: 0 10%;
+  background-color: #f6f6f6;
 }
 .body {
   padding-bottom: 50px;
-  padding-top: 120px;
+  padding-top: 100px;
 }
 </style>

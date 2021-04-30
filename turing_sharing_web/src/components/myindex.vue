@@ -7,40 +7,44 @@
         :boxitem="item"
       ></mybox>
       <!-- <a-pagination simple :total="ItemCount" :defaultPageSize="pagesize" /> -->
-      <span v-if="havepre" class="changepagebtn" @click="changepagefunc('-')"
-        ><a-icon type="left" />上一页</span
-      >
-      <span class="showpagecount">{{ pageNo }} / 共 {{ maxpage }} 页</span>
-      <span v-if="havenext" class="changepagebtn" @click="changepagefunc('+')"
-        >下一页<a-icon type="right"
-      /></span>
+      <div class="changepages">
+        <span v-if="havepre" class="changepagebtn" @click="changepagefunc('-')"
+          ><a-icon type="left" />上一页</span
+        >
+        <span class="showpagecount">{{ pageNo }} / 共 {{ maxpage }} 页</span>
+        <span v-if="havenext" class="changepagebtn" @click="changepagefunc('+')"
+          >下一页<a-icon type="right"
+        /></span>
+      </div>
     </div>
     <div class="n-and-c">
       <div class="notice-box">
         <span class="n-and-c-title">公告</span>
         <span class="notice">{{ notice }}</span>
       </div>
-      <span class="n-and-c-title">大厅评论</span>
-      <div class="hall-comment style-7">
-        <mycommentbox
-          v-for="(item, index) in hallcommentdata"
-          :key="index"
-          :commentboxitem="item"
-        ></mycommentbox>
-      </div>
-      <div class="my-hallcomment-parent">
-        <a-textarea
-          class="my-hallcomment-text"
-          v-model="mycomment"
-          placeholder="我也来说一句. . ."
-          auto-size
-        />
-        <a-button
-          class="my-hallcomment-btn"
-          type="primary"
-          @click="addhallcomment"
-          >发表</a-button
-        >
+      <div class="hall-comment-parent">
+        <span class="n-and-c-title">大厅评论</span>
+        <div class="hall-comment style-7">
+          <mycommentbox
+            v-for="(item, index) in hallcommentdata"
+            :key="index"
+            :commentboxitem="item"
+          ></mycommentbox>
+        </div>
+        <div class="my-hallcomment-parent">
+          <a-textarea
+            class="my-hallcomment-text"
+            v-model="mycomment"
+            placeholder="我也来说一句. . ."
+            auto-size
+          />
+          <a-button
+            class="my-hallcomment-btn"
+            type="primary"
+            @click="addhallcomment"
+            >发表</a-button
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -136,6 +140,14 @@ export default {
 </script>
 
 <style>
+.myindex {
+  height: 100%;
+  width: 100%;
+  background-color: #f6f6f6;
+}
+.changepages {
+  margin: 10px 0 30px;
+}
 .changepagebtn {
   cursor: pointer;
 }
@@ -152,21 +164,31 @@ export default {
 .notice-box {
   width: 300px;
   height: 200px;
-  background-color: red;
+  margin-bottom: 10px;
+  border: #e9e9e9 2px solid;
+}
+.notice {
+  padding: 0 10px;
 }
 .n-and-c-title {
-  font-size: 30px;
+  padding: 0 10px;
+  font-size: 20px;
+  line-height: 45px;
   font-weight: 700;
   display: block;
+  background-color: #fbfbfb;
+  border-bottom: #e9e9e9 2px solid;
 }
-
+.hall-comment-parent {
+  border: #e9e9e9 2px solid;
+}
 .hall-comment {
   width: 300px;
   max-height: 750px;
-  background-color: pink;
   overflow-y: scroll;
 }
 .my-hallcomment-parent {
+  padding-top: 5px;
   display: flex;
 }
 .my-hallcomment-text {
@@ -174,7 +196,7 @@ export default {
 }
 
 .style-7::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px #f5f5f5;
   background-color: #f5f5f5;
   border-radius: 2px;
 }
@@ -186,13 +208,6 @@ export default {
 
 .style-7::-webkit-scrollbar-thumb {
   border-radius: 2px;
-  background-image: -webkit-gradient(
-    linear,
-    left bottom,
-    left top,
-    color-stop(0.44, rgb(122, 153, 217)),
-    color-stop(0.72, rgb(73, 125, 189)),
-    color-stop(0.86, rgb(28, 58, 148))
-  );
+  background-color: rgba(0, 0, 0, 0.2);
 }
 </style>

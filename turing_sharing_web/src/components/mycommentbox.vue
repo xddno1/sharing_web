@@ -29,10 +29,9 @@ export default {
 
 <style>
 .mycommentbox {
-  border: 2px solid pink;
   width: 100%;
   flex-direction: column;
-  padding: 10px 25px;
+  padding: 10px 15px;
   margin-bottom: 8px;
 }
 .my-commentbox-title {
@@ -46,6 +45,7 @@ export default {
 }
 
 .my-commentbox-describe {
+  padding: 5px 12px;
   font-size: 15px;
   font-weight: 400;
   display: flex;
