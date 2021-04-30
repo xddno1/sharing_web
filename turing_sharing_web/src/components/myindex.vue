@@ -73,11 +73,6 @@ export default {
           if (a.data.length != 0) {
             this.ItemCount = a.data.passageItemCount;
 
-            for (let i in a.data.passageItem) {
-              a.data.passageItem[i].time = a.data.passageItem[i].time.split(
-                "T"
-              )[0];
-            }
             this.boxdata = a.data.passageItem;
             this.$store.state.maxpage = a.data.passageItemCount;
           } else {
@@ -94,9 +89,6 @@ export default {
       axios
         .get(`http://121.4.187.232:8080/hallComment/queryAllHallComment`)
         .then((a) => {
-          for (let i in a.data) {
-            a.data[i].time = a.data[i].time.split("T")[0];
-          }
           this.hallcommentdata = a.data;
         });
     },

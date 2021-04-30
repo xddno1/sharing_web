@@ -2,7 +2,9 @@
   <div class="mypage contianer" v-if="title">
     <div class="my-item-title-parent">
       <span class="my-item-title">{{ title }}</span
-      ><span class="my-item-time">{{ time.split("T")[0] }}</span>
+      ><span class="my-item-time">{{
+        time.replace("T", "  ").split(".")[0]
+      }}</span>
     </div>
 
     <div class="my-item-content">{{ content }}</div>

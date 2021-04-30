@@ -8,7 +8,7 @@
         commentboxitem.username
       }}</span>
       <span class="my-commentbox-time">
-        {{ commentboxitem.time.split("T")[0] }}</span
+        {{ commentboxitem.time.replace("T", "  ").split(".")[0] }}</span
       >
     </div>
     <span class="my-commentbox-describe">{{ commentboxitem.content }} </span>

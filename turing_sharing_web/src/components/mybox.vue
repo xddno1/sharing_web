@@ -2,7 +2,9 @@
   <div class="mybox">
     <div class="box-title">
       <span class="my-box-title" @click="intopage"> {{ boxitem.title }} </span>
-      <span class="my-box-time">{{ boxitem.time }}</span>
+      <span class="my-box-time">{{
+        boxitem.time.replace("T", "  ").split(".")[0]
+      }}</span>
     </div>
     <span class="my-box-describe">{{ boxitem.content }} </span>
   </div>

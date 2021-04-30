@@ -216,9 +216,11 @@ export default {
         url: ` http://121.4.187.232:8080/hallComment/queryAllHallComment`,
       }).then((e) => {
         this.$message.success("获取成功！");
-
+        console.log(e.data);
+        for (let i in e.data) {
+          e.data[i].time = e.data[i].time.replace("T", "  ").split(".")[0];
+        }
         this.allhallcomment = e.data;
-        console.log(this.allhallcomment);
       });
     },
     delethallcomment(e) {
@@ -240,12 +242,12 @@ export default {
         url: ` http://121.4.187.232:8080/passage/passageResources?passageID=${this.itemid}`,
       }).then((e) => {
         this.$message.success("获取成功！");
-        this.alluser = e.data;
         // e[0].content       内容
         // e[0].time          时间
         // e[0].title         标题
         this.updateitemtitle = e.data[0].title;
         this.updateitemcontent = e.data[0].content;
+        this.alluser = e.data;
       });
     },
     updateitem() {
@@ -267,6 +269,12 @@ export default {
           `http://121.4.187.232:8080/passage/queryAllPassage?pageNo=${this.pageNo}&pageSize=${this.$store.state.maxpage}`
         )
         .then((e) => {
+          //设置时间的展示方式
+          for (let i in e.data.passageItem) {
+            e.data.passageItem[i].time = e.data.passageItem[i].time
+              .replace("T", "  ")
+              .split(".")[0];
+          }
           this.allitems = e.data.passageItem;
         });
     },
