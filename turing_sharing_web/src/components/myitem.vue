@@ -194,8 +194,6 @@ export default {
 .my-item-my-comment .my-item-my-comment-text {
   margin-right: 10px;
 }
-.my-item-my-comment .my-item-my-comment-btn {
-}
 
 .my-item-resource {
   cursor: pointer;
