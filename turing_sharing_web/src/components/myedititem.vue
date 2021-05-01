@@ -112,6 +112,8 @@ export default {
       addcomment: "",
       previewVisible: false,
       previewImage: "",
+      oldimg: [],
+      delimgid: [],
     };
   },
   methods: {
@@ -156,9 +158,19 @@ export default {
       this.previewVisible = true;
     },
     handleChange({ fileList }) {
+      for (let i in this.filelist) {
+        //console.log(this.filelist[i]);
+        if (fileList[i] != this.filelist[i]) {
+          if (this.filelist[i].url) {
+            console.log(this.filelist[i].uid);
+          }
+          break;
+        }
+      }
       this.filelist = fileList;
       this.submitimg = [];
-      console.log(fileList[0].originFileObj);
+
+      // 老图片为undefined 新图片为 file对象
       for (let i in fileList) {
         // delete this.filelist[i].originFileObj.uid;
         this.submitimg.push(fileList[i].originFileObj);
@@ -238,7 +250,11 @@ export default {
     uploadimg() {
       let formData = new FormData();
       formData.append("passageID", this.pageid);
-      formData.append("file", this.submitimg[0]);
+      for (let i in this.submitimg) {
+        if (this.submitimg[i]) {
+          formData.append("file", this.submitimg[i]);
+        }
+      }
       console.log(formData.get("file"));
       axios({
         method: "post",
@@ -283,6 +299,8 @@ export default {
           this.title = a.data[0].title;
           this.resources = a.data[1];
           this.comments = a.data[3];
+          this.oldimg = a.data[2];
+          console.log(this.oldimg);
           for (let i in a.data[2]) {
             this.base64ToBlob({
               b64data: a.data[2][i],

@@ -379,6 +379,9 @@ export default {
 </script>
 
 <style>
+.myadmin {
+  background-color: #fff;
+}
 .my-admin-notice-btn-parent {
   text-align: center;
 }
@@ -405,13 +408,15 @@ export default {
   line-height: 60px;
   font-size: 20px;
   font-weight: 600;
-  margin-left: 10px;
+  margin-left: 50px;
   margin-bottom: 10px;
 }
 .my-admin-add-item-btn {
-  margin-left: 10px;
+  margin-left: 50px;
+  margin-bottom: 10px;
 }
 .mytable {
+  padding: 0 50px;
   background-color: #fff;
   margin-bottom: 40px;
 }

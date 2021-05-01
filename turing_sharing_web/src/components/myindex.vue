@@ -193,6 +193,7 @@ export default {
 }
 .notice {
   height: 149px;
+  width: 300px;
   display: inline-block;
   overflow-y: scroll;
   padding: 0 10px;
