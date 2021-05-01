@@ -75,7 +75,10 @@
       :commentboxitem="item"
     ></mycommentbox>
     <div class="my-edit-item-btn-parent">
-      <a-button class="my-edit-item-btn" type="primary">修改</a-button>
+      <a-button v-if="pageid" class="my-edit-item-btn" type="primary"
+        >修改</a-button
+      >
+      <a-button v-else class="my-edit-item-btn" type="primary">新建</a-button>
     </div>
   </div>
 </template>
@@ -189,7 +192,8 @@ export default {
       this.$router.replace({
         name: "index",
       });
-    } else {
+    }
+    if (this.$route.query.item != "newitem") {
       this.pageid = this.$route.query.item;
       let hideloading = this.$message.loading("资源加载中，请稍后..", 0);
       axios
@@ -230,6 +234,8 @@ export default {
           hideloading();
           this.$message.error("好像网络不怎么好呢..", 6000);
         });
+    } else {
+      this.title = "新建文章";
     }
   },
 };

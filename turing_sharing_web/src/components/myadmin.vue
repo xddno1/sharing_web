@@ -22,11 +22,17 @@
       </div>
     </a-modal>
     <div><span class="my-admin-title">文章管理</span></div>
+    <div>
+      <a-button class="my-admin-add-item-btn" type="primary" @click="additem"
+        >新建</a-button
+      >
+    </div>
     <a-table
       class="mytable"
       :columns="itemscolumns"
       :data-source="allitems"
       rowKey="id"
+      :pagination="{ pageSize: 5 }"
     >
       <template slot="edit" slot-scope="text">
         <a-popconfirm
@@ -47,6 +53,7 @@
       :columns="hallcommentcolumns"
       :data-source="allhallcomment"
       rowKey="id"
+      :pagination="{ pageSize: 5 }"
     >
       <template slot="edit" slot-scope="text">
         <a-popconfirm
@@ -345,6 +352,14 @@ export default {
         },
       });
     },
+    additem() {
+      this.$router.push({
+        name: "edititem",
+        query: {
+          item: "newitem",
+        },
+      });
+    },
   },
   created() {
     if (!this.$store.state.loginstate.admintoken) {
@@ -389,6 +404,9 @@ export default {
   font-weight: 600;
   margin-left: 10px;
   margin-bottom: 10px;
+}
+.my-admin-add-item-btn {
+  margin-left: 10px;
 }
 .mytable {
   background-color: #fff;
