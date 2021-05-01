@@ -184,57 +184,64 @@ export default {
     },
   },
   created() {
-    this.pageid = this.$route.query.item;
-    let hideloading = this.$message.loading("资源加载中，请稍后..", 0);
-    axios
-      .get(
-        ` http://121.4.187.232:8080/passage/passageResources?passageID=${this.pageid}`
-      )
-      .then((a) => {
-        hideloading();
-        console.log(a);
-        // a[0].content       内容
-        // a[0].time          时间$store
-        // a[0].title         标题
-        // a[1]               资源
-        // a[2]               评论
-        // a[3]               图片
-        this.content = a.data[0].content;
-        this.time = a.data[0].time;
-        this.title = a.data[0].title;
-        this.resources = a.data[1];
-        this.comments = a.data[3];
-        for (let i in a.data[2]) {
-          this.base64ToBlob({
-            b64data: a.data[2][i],
-            contentType: "image/png",
-          }).then((res) => {
-            // 转换后的blob对象
-            console.log(res);
-            this.filelist.push({
-              uid: "-" + i,
-              name: "a picture",
-              status: "done",
-              url: res.preview,
-            });
-          });
-        }
-      })
-      .catch(() => {
-        hideloading();
-        this.$message.error("好像网络不怎么好呢..", 6000);
+    if (!this.$store.state.loginstate.admintoken) {
+      this.$message.error("请使用管理员登录！");
+      this.$router.replace({
+        name: "index",
       });
+    } else {
+      this.pageid = this.$route.query.item;
+      let hideloading = this.$message.loading("资源加载中，请稍后..", 0);
+      axios
+        .get(
+          ` http://121.4.187.232:8080/passage/passageResources?passageID=${this.pageid}`
+        )
+        .then((a) => {
+          hideloading();
+          console.log(a);
+          // a[0].content       内容
+          // a[0].time          时间$store
+          // a[0].title         标题
+          // a[1]               资源
+          // a[2]               评论
+          // a[3]               图片
+          this.content = a.data[0].content;
+          this.time = a.data[0].time;
+          this.title = a.data[0].title;
+          this.resources = a.data[1];
+          this.comments = a.data[3];
+          for (let i in a.data[2]) {
+            this.base64ToBlob({
+              b64data: a.data[2][i],
+              contentType: "image/png",
+            }).then((res) => {
+              // 转换后的blob对象
+              console.log(res);
+              this.filelist.push({
+                uid: "-" + i,
+                name: "a picture",
+                status: "done",
+                url: res.preview,
+              });
+            });
+          }
+        })
+        .catch(() => {
+          hideloading();
+          this.$message.error("好像网络不怎么好呢..", 6000);
+        });
+    }
   },
 };
 </script>
 
 <style>
 .mypage {
-  background-color: #f6f6f6;
+  background-color: #fff;
 }
-.mypage .my-edit-item-title {
-}
+
 .my-edit-item-title {
+  display: block;
   font-size: 30px;
   font-weight: 600;
   line-height: 60px;

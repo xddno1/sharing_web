@@ -35,6 +35,7 @@ export default {
 .mybox {
   border: #e9e9e9 2px solid;
   width: 100%;
+  min-width: 500px;
   height: 200px;
   flex-direction: column;
   padding: 10px 25px;

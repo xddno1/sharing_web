@@ -1,9 +1,36 @@
 <template>
   <div class="myadmin">
-    <a-table :columns="itemscolumns" :data-source="allitems" rowKey="id">
+    <div class="my-admin-btn-parent">
+      <a-button
+        class="my-admin-btn"
+        type="primary"
+        @click="editnotice_show_close"
+        >发布公告</a-button
+      >
+    </div>
+    <a-modal :visible="visible" :footer="null" @cancel="editnotice_show_close">
+      <div><span class="my-admin-title">发布公告</span></div>
+      <a-textarea
+        v-model="noticecontent"
+        placeholder="快输入要发布的公告吧！！"
+        auto-size
+      ></a-textarea>
+      <div class="my-admin-notice-btn-parent">
+        <a-button class="my-admin-notice-btn" type="primary" @click="sentnotice"
+          >发布</a-button
+        >
+      </div>
+    </a-modal>
+    <div><span class="my-admin-title">文章管理</span></div>
+    <a-table
+      class="mytable"
+      :columns="itemscolumns"
+      :data-source="allitems"
+      rowKey="id"
+    >
       <template slot="edit" slot-scope="text">
         <a-popconfirm
-          title="主人您确认要删除我嘛？ToT"
+          title="主人您狠心要删除我嘛？ToT"
           ok-text="Yes"
           cancel-text="No"
           @confirm="deletitem(text)"
@@ -14,14 +41,16 @@
         <a-icon type="edit" class="btn editbtn" @click="edititem(text)" />
       </template>
     </a-table>
+    <div><span class="my-admin-title">大厅评论</span></div>
     <a-table
+      class="mytable"
       :columns="hallcommentcolumns"
       :data-source="allhallcomment"
       rowKey="id"
     >
       <template slot="edit" slot-scope="text">
         <a-popconfirm
-          title="主人您确认要删除我嘛？ToT"
+          title="主人您狠心要删除我嘛？ToT"
           ok-text="Yes"
           cancel-text="No"
           @confirm="delethallcomment(text)"
@@ -31,68 +60,70 @@
       </template>
     </a-table>
 
-    <div class="pages">
-      <h1>图片上传</h1>
-      <div>
-        <span>请输入文章id</span>
-        <input type="text" v-model="imgpassageid" />
-      </div>
-
-      <input
-        name="imgfile"
-        ref="imgfile"
-        type="file"
-        accept="image/png, image/gif, image/jpeg"
-      />
-      <button @click="uploadimg">上传</button>
-    </div>
-    <div>
-      <h1>资源上传</h1>
-      <div>
-        <span>请输入文章id</span>
-        <input type="text" v-model="resourcepassageid" />
-      </div>
-      <input name="resourcefile" ref="resourcefile" type="file" />
-      <button @click="uploadresource">上传</button>
-    </div>
-    <div>
-      <h1>新建文章</h1>
-      <div>
-        <span>请输入标题：</span>
-        <input type="text" v-model="newitemtitle" />
-      </div>
-      <div>
-        <span>请输入内容：</span>
-        <input type="text" v-model="newitemcontent" />
-      </div>
-      <button @click="creatitem">创建</button>
-    </div>
-
-    <div>
-      <h1>更新文章</h1>
-      <div>
+    <div style="display: none">
+      <div class="pages">
+        <h1>图片上传</h1>
         <div>
           <span>请输入文章id</span>
-          <input type="text" v-model="itemid" />
+          <input type="text" v-model="imgpassageid" />
         </div>
-        <button @click="getitem">获取文章数据</button>
-        <div>
-          <span>文章标题:</span>
-          <input type="text " v-model="updateitemtitle" />
-        </div>
-        <div>
-          <span>文章内容:</span>
-          <input type="text " v-model="updateitemcontent" />
-        </div>
-        <button @click="updateitem">更新</button>
+
+        <input
+          name="imgfile"
+          ref="imgfile"
+          type="file"
+          accept="image/png, image/gif, image/jpeg"
+        />
+        <button @click="uploadimg">上传</button>
       </div>
-    </div>
-    <div>
-      <h1>更新文章</h1>
       <div>
+        <h1>资源上传</h1>
         <div>
           <span>请输入文章id</span>
-          <input type="text" v-model="itemid" />
+          <input type="text" v-model="resourcepassageid" />
+        </div>
+        <input name="resourcefile" ref="resourcefile" type="file" />
+        <button @click="uploadresource">上传</button>
+      </div>
+      <div>
+        <h1>新建文章</h1>
+        <div>
+          <span>请输入标题：</span>
+          <input type="text" v-model="newitemtitle" />
+        </div>
+        <div>
+          <span>请输入内容：</span>
+          <input type="text" v-model="newitemcontent" />
+        </div>
+        <button @click="creatitem">创建</button>
+      </div>
+
+      <div>
+        <h1>更新文章</h1>
+        <div>
+          <div>
+            <span>请输入文章id</span>
+            <input type="text" v-model="itemid" />
+          </div>
+          <button @click="getitem">获取文章数据</button>
+          <div>
+            <span>文章标题:</span>
+            <input type="text " v-model="updateitemtitle" />
+          </div>
+          <div>
+            <span>文章内容:</span>
+            <input type="text " v-model="updateitemcontent" />
+          </div>
+          <button @click="updateitem">更新</button>
+        </div>
+      </div>
+      <div>
+        <h1>更新文章</h1>
+        <div>
+          <div>
+            <span>请输入文章id</span>
+            <input type="text" v-model="itemid" />
+          </div>
         </div>
       </div>
     </div>
@@ -160,9 +191,26 @@ export default {
       itemid: "",
       updateitemtitle: "",
       updateitemcontent: "",
+      visible: false,
+      noticecontent: "",
     };
   },
   methods: {
+    editnotice_show_close() {
+      this.visible = !this.visible;
+    },
+    sentnotice() {
+      this.visible = !this.visible;
+      axios({
+        method: "post",
+        url: `http://121.4.187.232:8080/admin/updateNotice?content=${this.noticecontent}`,
+        headers: {
+          token: this.$store.state.loginstate.admintoken,
+        },
+      }).then((e) => {
+        this.$message.success("发布成功！");
+      });
+    },
     uploadimg() {
       let formData = new FormData();
       formData.append("passageID", this.imgpassageid);
@@ -313,6 +361,39 @@ export default {
 </script>
 
 <style>
+.my-admin-notice-btn-parent {
+  text-align: center;
+}
+.my-admin-notice-btn-parent .my-admin-notice-btn {
+  margin-top: 30px;
+}
+.my-admin-btn-parent {
+  position: fixed;
+  text-align: center;
+  bottom: 20px;
+  right: 30px;
+}
+.my-admin-btn-parent .my-admin-btn {
+  margin-top: 10px;
+  margin-bottom: 30px;
+  width: 50px;
+  height: 100px;
+}
+.my-admin-btn-parent .my-admin-btn span {
+  writing-mode: tb-rl;
+  display: inline;
+}
+.my-admin-title {
+  line-height: 60px;
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+.mytable {
+  background-color: #fff;
+  margin-bottom: 40px;
+}
 .btn {
   cursor: pointer;
 }

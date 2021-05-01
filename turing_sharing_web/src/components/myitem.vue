@@ -113,6 +113,7 @@ export default {
             )
             .then((e) => {
               this.$message.success("获取评论成功");
+              console.log(e.data);
               this.comments = e.data;
             })
             .catch((e) => {
@@ -133,7 +134,7 @@ export default {
         console.log(a);
         hideloading();
         // a[0].content       内容
-        // a[0].time          时间$store
+        // a[0].time          时间
         // a[0].title         标题
         // a[1]               资源
         // a[3]               评论
@@ -155,6 +156,7 @@ export default {
 
 <style>
 .mypage {
+  background-color: #fff;
   border: #e9e9e9 2px solid;
 }
 

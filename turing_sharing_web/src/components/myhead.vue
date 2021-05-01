@@ -206,10 +206,11 @@ export default {
 <style>
 .myhead {
   z-index: 100;
-  background-color: pink;
+  background-color: #fff;
   position: fixed;
   height: 50px;
   width: 100%;
+  box-shadow: 0 0 5px #888888;
 }
 .headcontianer {
   padding: 0 10%;

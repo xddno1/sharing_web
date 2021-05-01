@@ -8,11 +8,17 @@
       ></mybox>
       <!-- <a-pagination simple :total="ItemCount" :defaultPageSize="pagesize" /> -->
       <div class="changepages">
-        <span v-if="havepre" class="changepagebtn" @click="changepagefunc('-')"
+        <span
+          v-if="havepre"
+          class="changepagebtn fl"
+          @click="changepagefunc('-')"
           ><a-icon type="left" />上一页</span
         >
         <span class="showpagecount">{{ pageNo }} / 共 {{ maxpage }} 页</span>
-        <span v-if="havenext" class="changepagebtn" @click="changepagefunc('+')"
+        <span
+          v-if="havenext"
+          class="changepagebtn fr"
+          @click="changepagefunc('+')"
           >下一页<a-icon type="right"
         /></span>
       </div>
@@ -20,7 +26,7 @@
     <div class="n-and-c">
       <div class="notice-box">
         <span class="n-and-c-title">公告</span>
-        <span class="notice">{{ notice }}</span>
+        <span class="notice style-7">{{ notice }}</span>
       </div>
       <div class="hall-comment-parent">
         <span class="n-and-c-title">大厅评论</span>
@@ -144,30 +150,51 @@ export default {
   height: 100%;
   width: 100%;
   background-color: #f6f6f6;
+  /* flex-direction: column; */
+}
+
+.myindex .pages {
+  /* float: left; */
+  width: calc(100% - 350px);
+  display: inline-block;
+}
+.n-and-c {
+  margin: 0 10px 0 30px;
+  /* float: right; */
+  display: inline-block;
+  vertical-align: top;
 }
 .changepages {
   margin: 10px 0 30px;
-}
-.changepagebtn {
-  cursor: pointer;
-}
-.showpagecount {
+  flex-direction: column;
   text-align: center;
 }
-.pages {
-  float: left;
-  width: calc(100% - 350px);
+.changepagebtn {
+  display: inline-flex;
+  cursor: pointer;
 }
-.n-and-c {
+.fl {
+  float: left;
+}
+.fr {
   float: right;
 }
+.showpagecount {
+  display: inline-block;
+  text-align: center;
+}
+
 .notice-box {
   width: 300px;
   height: 200px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   border: #e9e9e9 2px solid;
+  background-color: #fff;
 }
 .notice {
+  height: 149px;
+  display: inline-block;
+  overflow-y: scroll;
   padding: 0 10px;
 }
 .n-and-c-title {
@@ -181,6 +208,7 @@ export default {
 }
 .hall-comment-parent {
   border: #e9e9e9 2px solid;
+  background-color: #fff;
 }
 .hall-comment {
   width: 300px;
@@ -188,6 +216,7 @@ export default {
   overflow-y: scroll;
 }
 .my-hallcomment-parent {
+  border-top: #e9e9e9 2px solid;
   padding-top: 5px;
   display: flex;
 }

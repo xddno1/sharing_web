@@ -1,7 +1,7 @@
 <template>
   <div class="mycommentbox">
     <div class="commentbox-title">
-      <span v-if="!!!commentboxitem.username" class="my-commentbox-title">
+      <span v-if="!commentboxitem.username" class="my-commentbox-title">
         游客</span
       >
       <span v-else class="my-commentbox-title">{{
@@ -24,6 +24,7 @@ export default {
     return {};
   },
   methods: {},
+  created() {},
 };
 </script>
 
@@ -31,8 +32,8 @@ export default {
 .mycommentbox {
   width: 100%;
   flex-direction: column;
-  padding: 10px 15px;
-  margin-bottom: 8px;
+  padding: 10px 15px 18px;
+  border-bottom: #e9e9e9 2px solid;
 }
 .my-commentbox-title {
   margin-right: 5px;
