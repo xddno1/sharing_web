@@ -53,32 +53,41 @@
       </a-tag>
       <a-tag closable @close=""> Tag 2 </a-tag> -->
     </div>
-    <span class="my-edit-item-title">评论</span>
-    <div class="my-edit-item-my-comment">
-      <a-textarea
-        class="my-edit-item-my-comment-text"
-        v-model="addcomment"
-        placeholder="我也来说一句. . ."
-        auto-size
-      ></a-textarea>
-      <a-button
-        class="my-edit-item-my-comment-btn"
-        type="primary"
-        @click="commentsubmit"
-      >
-        评论
-      </a-button>
+    <div v-if="time">
+      <span class="my-edit-item-title">评论</span>
+      <div class="my-edit-item-my-comment">
+        <a-textarea
+          class="my-edit-item-my-comment-text"
+          v-model="addcomment"
+          placeholder="我也来说一句. . ."
+          auto-size
+        ></a-textarea>
+        <a-button
+          class="my-edit-item-my-comment-btn"
+          type="primary"
+          @click="commentsubmit"
+        >
+          评论
+        </a-button>
+      </div>
+      <mycommentbox
+        v-for="(item, index) in comments"
+        :key="index"
+        :commentboxitem="item"
+      ></mycommentbox>
     </div>
-    <mycommentbox
-      v-for="(item, index) in comments"
-      :key="index"
-      :commentboxitem="item"
-    ></mycommentbox>
     <div class="my-edit-item-btn-parent">
-      <a-button v-if="pageid" class="my-edit-item-btn" type="primary"
+      <a-button
+        v-if="time"
+        class="my-edit-item-btn"
+        type="primary"
+        @click="uploaditem"
         >修改</a-button
       >
-      <a-button v-else class="my-edit-item-btn" type="primary">新建</a-button>
+
+      <a-button v-else class="my-edit-item-btn" type="primary" @click="newitem"
+        >新建</a-button
+      >
     </div>
   </div>
 </template>
@@ -98,9 +107,9 @@ export default {
       resources: [],
       comments: [],
       filelist: [],
+      submitimg: [],
       mycomment: "",
       addcomment: "",
-
       previewVisible: false,
       previewImage: "",
     };
@@ -113,12 +122,11 @@ export default {
       ) {
         this.$message.error("请先登录");
       } else {
-        console.log(this);
         axios({
           method: "post",
-          url: `http://121.4.187.232:8080/comment/createComment?content=${this.addcomment}&passageID=${this.pageid}&userID=${this.$store.state.loginstate.userid}`,
+          url: `http://121.4.187.232:8080/admin/createComment?content=${this.addcomment}&passageID=${this.pageid}`,
           headers: {
-            token: this.$store.state.loginstate.usertoken,
+            token: this.$store.state.loginstate.admintoken,
           },
         }).then((e) => {
           this.$message.success("评论成功！");
@@ -130,7 +138,6 @@ export default {
             .then((e) => {
               this.$message.success("获取评论成功");
               this.comments = e.data;
-              console.log(e);
             })
             .catch((e) => {
               this.$message.error("获取评论失败！");
@@ -150,7 +157,12 @@ export default {
     },
     handleChange({ fileList }) {
       this.filelist = fileList;
-      console.log(this.filelist);
+      this.submitimg = [];
+      console.log(fileList[0].originFileObj);
+      for (let i in fileList) {
+        // delete this.filelist[i].originFileObj.uid;
+        this.submitimg.push(fileList[i].originFileObj);
+      }
     },
     base64ToBlob({ b64data = "", contentType = "", sliceSize = 512 } = {}) {
       return new Promise((resolve, reject) => {
@@ -185,6 +197,64 @@ export default {
     cutupload() {
       return false;
     },
+    newitem() {
+      if (!this.title || !this.content) {
+        this.$message.error("请输入文章标题或者内容！");
+      } else {
+        this.creatitem();
+      }
+    },
+    uploaditem() {
+      if (!this.title || !this.content) {
+        this.$message.error("请输入文章标题或者内容！");
+      } else {
+        axios({
+          method: "post",
+          url: `http://121.4.187.232:8080/admin/updatePassage?content=${this.content}&passageID=${this.pageid}&title=${this.title}`,
+          headers: {
+            token: this.$store.state.loginstate.admintoken,
+          },
+        }).then((e) => {
+          this.$message.success("修改成功！");
+          this.uploadimg();
+        });
+      }
+    },
+    creatitem() {
+      axios({
+        method: "post",
+        url: `http://121.4.187.232:8080/admin/createPassage?content=${this.content}&title=${this.title}`,
+        headers: {
+          token: this.$store.state.loginstate.admintoken,
+        },
+      }).then((e) => {
+        this.$message.success("创建成功！");
+        this.uploadimg();
+        this.$router.replace({
+          name: "admin",
+        });
+      });
+    },
+    uploadimg() {
+      let formData = new FormData();
+      formData.append("passageID", this.pageid);
+      formData.append("file", this.submitimg[0]);
+      console.log(formData.get("file"));
+      axios({
+        method: "post",
+        url: "http://121.4.187.232:8080/admin/uploadImg",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          token: this.$store.state.loginstate.admintoken,
+        },
+      }).then((e) => {
+        this.$message.success("上传成功！");
+        this.$router.replace({
+          name: "admin",
+        });
+      });
+    },
   },
   created() {
     if (!this.$store.state.loginstate.admintoken) {
@@ -202,7 +272,6 @@ export default {
         )
         .then((a) => {
           hideloading();
-          console.log(a);
           // a[0].content       内容
           // a[0].time          时间$store
           // a[0].title         标题
@@ -220,7 +289,6 @@ export default {
               contentType: "image/png",
             }).then((res) => {
               // 转换后的blob对象
-              console.log(res);
               this.filelist.push({
                 uid: "-" + i,
                 name: "a picture",

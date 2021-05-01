@@ -67,7 +67,7 @@
       </template>
     </a-table>
 
-    <div style="display: none">
+    <div v-if="true">
       <div class="pages">
         <h1>图片上传</h1>
         <div>
@@ -221,7 +221,10 @@ export default {
     uploadimg() {
       let formData = new FormData();
       formData.append("passageID", this.imgpassageid);
+      console.log(this.$refs.imgfile.files[0]);
       formData.append("file", this.$refs.imgfile.files[0]);
+      formData.append("file", this.$refs.imgfile.files[0]);
+      console.log(formData.getAll("file"));
       axios({
         method: "post",
         url: "http://121.4.187.232:8080/admin/uploadImg",
