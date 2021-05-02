@@ -9,7 +9,7 @@
         >Hi, 请登录</span
       >
       <a-dropdown v-else>
-        <span class="login">Hi, {{ this.userform.name }}</span>
+        <span class="login">Hi, {{ userform.name }}</span>
         <a-menu slot="overlay" @click="unlogin">
           <a-menu-item key="1"> 退出登录 </a-menu-item>
         </a-menu>
@@ -121,6 +121,9 @@ export default {
               userid: a.data.userID,
             };
             this.token = a.data.token;
+            localStorage.setItem("xdd_user_token", this.token);
+            localStorage.setItem("xdd_user_id", a.data.userID);
+            localStorage.setItem("xdd_user_name", this.userform.name);
             this.$store.commit("upDateToken", loginstate);
           }
           if (a.data.msg == null) {
@@ -142,6 +145,8 @@ export default {
             this.visible = false;
             this.$message.success("登录成功！");
             this.token = a.data.token;
+            localStorage.setItem("xdd_admin_token", this.token);
+            localStorage.setItem("xdd_admin_name", this.userform.name);
             const loginstate = {
               admintoken: a.data.token,
             };
@@ -170,13 +175,16 @@ export default {
                 `http://121.4.187.232:8080/user/userLogin?password=${this.registerform.password}&username=${this.registerform.name}`
               )
               .then((a) => {
+                this.userform = this.registerform;
                 this.token = a.data.token;
+                localStorage.setItem("xdd_user_token", this.token);
+                localStorage.setItem("xdd_user_id", a.data.userID);
+                localStorage.setItem("xdd_user_name", this.userform.name);
                 const loginstate = {
                   usertoken: a.data.token,
                   userid: a.data.userID,
                 };
                 this.$store.commit("upDateToken", loginstate);
-                this.userform = this.registerform;
               });
           } else {
             this.$message.error("用户名已存在！");
@@ -191,14 +199,55 @@ export default {
         });
       }
       this.token = "";
+      localStorage.setItem("xdd_admin_token", this.token);
+      localStorage.setItem("xdd_admin_name", "this.token");
+      localStorage.setItem("xdd_user_token", this.token);
+      localStorage.setItem("xdd_user_id", "1");
+      localStorage.setItem("xdd_user_name", "1");
+      localStorage.removeItem("xdd_admin_token");
+      localStorage.removeItem("xdd_admin_name");
+      localStorage.removeItem("xdd_user_token");
+      localStorage.removeItem("xdd_user_id");
+      localStorage.removeItem("xdd_user_name");
       this.$store.commit("upDateToken", {});
     },
   },
 
   created() {
-    this.$router.push({
-      name: "index",
-    });
+    let usertoken = localStorage.getItem("xdd_user_token");
+    let admintoken = localStorage.getItem("xdd_admin_token");
+    if (usertoken) {
+      let userid = localStorage.getItem("xdd_user_id");
+      let username = localStorage.getItem("xdd_user_name");
+      console.log(username);
+      const loginstate = {
+        usertoken: usertoken,
+        userid: userid,
+      };
+      this.userform.name = username;
+      this.$store.commit("upDateToken", loginstate);
+      this.token = usertoken;
+      this.$router.push({
+        name: "index",
+      });
+    }
+    if (admintoken) {
+      let adminname = localStorage.getItem("xdd_admin_name");
+      console.log(adminname);
+      const loginstate = {
+        admintoken: admintoken,
+      };
+      this.userform.name = adminname;
+      this.$store.commit("upDateToken", loginstate);
+      this.token = admintoken;
+      this.$router.push({
+        name: "admin",
+      });
+    } else {
+      this.$router.push({
+        name: "index",
+      });
+    }
   },
 };
 </script>

@@ -21,7 +21,7 @@ const store = new Vuex.Store({
   }
 });
 
-new Vue({
+const myVue = new Vue({
   el: "#app",
   store,
   router,

@@ -321,19 +321,31 @@ export default {
       });
     },
     getbox() {
-      axios
-        .get(
-          `http://121.4.187.232:8080/passage/queryAllPassage?pageNo=${this.pageNo}&pageSize=${this.$store.state.maxpage}`
-        )
-        .then((e) => {
-          //设置时间的展示方式
-          for (let i in e.data.passageItem) {
-            e.data.passageItem[i].time = e.data.passageItem[i].time
-              .replace("T", "  ")
-              .split(".")[0];
-          }
-          this.allitems = e.data.passageItem;
-        });
+      if (typeof this.$store.state.maxpage != "object") {
+        axios
+          .get(
+            `http://121.4.187.232:8080/passage/queryAllPassage?pageNo=${this.pageNo}&pageSize=${this.$store.state.maxpage}`
+          )
+          .then((e) => {
+            //设置时间的展示方式
+            for (let i in e.data.passageItem) {
+              e.data.passageItem[i].time = e.data.passageItem[i].time
+                .replace("T", "  ")
+                .split(".")[0];
+            }
+            this.allitems = e.data.passageItem;
+          });
+      } else {
+        axios
+          .get(
+            `http://121.4.187.232:8080/passage/queryAllPassage?pageNo=${this.pageNo}&pageSize=1`
+          )
+          .then((e) => {
+            //设置时间的展示方式
+            this.$store.state.maxpage = e.data.passageItemCount;
+            this.getbox();
+          });
+      }
     },
     deletitem(e) {
       axios({
