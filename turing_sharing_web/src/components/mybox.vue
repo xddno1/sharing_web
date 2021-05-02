@@ -43,9 +43,9 @@ export default {
   background-color: #fff;
 }
 .my-box-title {
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 600;
-  line-height: 60px;
+  line-height: 55px;
   cursor: pointer;
 }
 @keyframes titlecolor {
@@ -60,7 +60,7 @@ export default {
 }
 .my-box-time {
   float: right;
-  line-height: 60px;
+  line-height: 55px;
 }
 .my-box-describe {
   font-size: 13px;

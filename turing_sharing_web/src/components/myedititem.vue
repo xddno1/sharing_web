@@ -1,5 +1,5 @@
 <template>
-  <div class="mypage contianer" v-if="title">
+  <div class="mypage contianer">
     <div class="my-edit-item-title-parent">
       <span class="my-edit-item-title">标题</span>
       <a-textarea class="my-edit-item-input" v-model="title" auto-size />
