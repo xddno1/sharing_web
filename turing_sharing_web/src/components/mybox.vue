@@ -1,12 +1,14 @@
 <template>
   <div class="mybox">
     <div class="box-title">
-      <span class="my-box-title" @click="intopage"> {{ boxitem.title }} </span>
+      <span class="my-box-title hide-title-Text" @click="intopage">
+        {{ boxitem.title }}
+      </span>
       <span class="my-box-time">{{
         boxitem.time.replace("T", "  ").split(".")[0]
       }}</span>
     </div>
-    <span class="my-box-describe">{{ boxitem.content }} </span>
+    <div class="my-box-describe hide-dsc-Text">{{ boxitem.content }}</div>
   </div>
 </template>
 
@@ -35,7 +37,6 @@ export default {
 .mybox {
   border: #e9e9e9 2px solid;
   width: 100%;
-  min-width: 500px;
   height: 200px;
   flex-direction: column;
   padding: 10px 25px;
@@ -46,6 +47,7 @@ export default {
   font-size: 26px;
   font-weight: 600;
   line-height: 55px;
+  margin-right: 10px;
   cursor: pointer;
 }
 @keyframes titlecolor {
@@ -59,14 +61,27 @@ export default {
   animation-fill-mode: forwards;
 }
 .my-box-time {
-  float: right;
-  line-height: 55px;
+  line-height: 40px;
 }
 .my-box-describe {
   font-size: 13px;
   color: #666;
-  display: flex;
-  height: 140px;
+  height: 80px;
+}
+.hide-title-Text {
   overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* 限制在一个块元素显示的文本的行数 */
+  -webkit-box-orient: vertical; /* 垂直排列 */
+  word-break: break-all; /* 内容自动换行 */
+}
+.hide-dsc-Text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* 限制在一个块元素显示的文本的行数 */
+  -webkit-box-orient: vertical; /* 垂直排列 */
+  word-break: break-all; /* 内容自动换行 */
 }
 </style>

@@ -162,6 +162,7 @@ export default {
 .myindex {
   height: 100%;
   width: 100%;
+  min-width: 1000px;
   background-color: #f6f6f6;
   /* flex-direction: column; */
 }

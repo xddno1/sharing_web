@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     backcommentid() {
-      console.log(1);
       console.log(this.commentboxitem);
       if (this.commentboxitem.commentID) {
         this.$emit("delcomment", this.commentboxitem.commentID);

@@ -2,7 +2,7 @@
   <div class="myhead">
     <div class="headcontianer">
       <div class="welcome">
-        <span>欢迎光临</span>
+        <span>{{ headtitle }}</span>
       </div>
 
       <span v-if="token == ''" class="login" @click="showModal"
@@ -59,6 +59,12 @@
             <a-form-item label="密码">
               <a-input type="password" v-model="registerform.password" />
             </a-form-item>
+            <span>注册自动登录</span>
+            <a-switch
+              style="margin-right: 10px; float: left"
+              default-checked
+              @change="aotulogin"
+            />
             <a-button
               style="margin-right: 10px; float: right"
               type="primary"
@@ -94,6 +100,8 @@ export default {
       },
       visible: false,
       token: "",
+      headtitle: "资源下载网",
+      autologin: true,
     };
   },
 
@@ -170,27 +178,32 @@ export default {
           if (a.data == "isOk") {
             this.visible = false;
             this.$message.success("注册成功！");
-            axios
-              .post(
-                `http://121.4.187.232:8080/user/userLogin?password=${this.registerform.password}&username=${this.registerform.name}`
-              )
-              .then((a) => {
-                this.userform = this.registerform;
-                this.token = a.data.token;
-                localStorage.setItem("xdd_user_token", this.token);
-                localStorage.setItem("xdd_user_id", a.data.userID);
-                localStorage.setItem("xdd_user_name", this.userform.name);
-                const loginstate = {
-                  usertoken: a.data.token,
-                  userid: a.data.userID,
-                };
-                this.$store.commit("upDateToken", loginstate);
-              });
+            if (this.autologin) {
+              axios
+                .post(
+                  `http://121.4.187.232:8080/user/userLogin?password=${this.registerform.password}&username=${this.registerform.name}`
+                )
+                .then((a) => {
+                  this.userform = this.registerform;
+                  this.token = a.data.token;
+                  localStorage.setItem("xdd_user_token", this.token);
+                  localStorage.setItem("xdd_user_id", a.data.userID);
+                  localStorage.setItem("xdd_user_name", this.userform.name);
+                  const loginstate = {
+                    usertoken: a.data.token,
+                    userid: a.data.userID,
+                  };
+                  this.$store.commit("upDateToken", loginstate);
+                });
+            }
           } else {
             this.$message.error("用户名已存在！");
           }
           console.log(a.data);
         });
+    },
+    aotulogin() {
+      this.autologin = !this.autologin;
     },
     unlogin() {
       if (this.$route.path == "/admin") {

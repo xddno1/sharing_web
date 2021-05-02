@@ -286,7 +286,10 @@ export default {
         },
       }).then((e) => {
         this.$message.success("创建成功！");
+        console.log(e.data.split(":")[1]);
+        this.pageid = e.data.split(":")[1];
         this.uploadimg();
+        this.uploadresource();
         this.$router.replace({
           name: "admin",
         });

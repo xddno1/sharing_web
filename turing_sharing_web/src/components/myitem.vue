@@ -8,15 +8,11 @@
     </div>
 
     <div class="my-item-content">{{ content }}</div>
-    <div
-      v-for="(item, index) in pictures"
-      :key="item"
-      class="my-item-showimg-parent"
-    >
+    <div v-for="item in pictures" :key="item" class="my-item-showimg-parent">
       <img class="my-item-showimg" :src="'data:image/png;base64,' + item" />
-      <span class="my-item-showimg-describe">图片{{ index + 1 }}</span>
+      <span class="my-item-showimg-describe">图片</span>
     </div>
-    <div>
+    <div class="my-item-resource-parent">
       <span
         v-for="(item, index) in resources"
         :key="index"
@@ -99,17 +95,31 @@ export default {
       ) {
         this.$message.error("请先登录");
       } else {
-        axios({
-          method: "post",
-          url: `http://121.4.187.232:8080/comment/createComment?content=${this.addcomment}&passageID=${this.pageid}&userID=${this.$store.state.loginstate.userid}`,
-          headers: {
-            token: this.$store.state.loginstate.usertoken,
-          },
-        }).then((e) => {
-          this.addcomment = "";
-          this.getcomment();
-          this.$message.success("评论成功！");
-        });
+        if (this.$store.state.loginstate.userid) {
+          axios({
+            method: "post",
+            url: `http://121.4.187.232:8080/comment/createComment?content=${this.addcomment}&passageID=${this.pageid}&userID=${this.$store.state.loginstate.userid}`,
+            headers: {
+              token: this.$store.state.loginstate.usertoken,
+            },
+          }).then((e) => {
+            this.addcomment = "";
+            this.getcomment();
+            this.$message.success("评论成功！");
+          });
+        } else {
+          axios({
+            method: "post",
+            url: `http://121.4.187.232:8080/admin/createComment?content=${this.addcomment}&passageID=${this.pageid}`,
+            headers: {
+              token: this.$store.state.loginstate.admintoken,
+            },
+          }).then((e) => {
+            this.$message.success("评论成功！");
+            this.addcomment = "";
+            this.getcomment();
+          });
+        }
       }
     },
     delcomment(e) {
@@ -161,6 +171,7 @@ export default {
         this.resources = a.data[1];
         this.comments = a.data[3];
         this.pictures = a.data[2];
+        console.log(this.pictures);
       })
       .catch((a) => {
         hideloading();
@@ -183,9 +194,9 @@ export default {
   font-size: 30px;
   font-weight: 600;
   line-height: 60px;
+  margin-right: 20px;
 }
 .my-item-title-parent .my-item-time {
-  float: right;
   line-height: 60px;
 }
 
@@ -214,12 +225,14 @@ export default {
 .my-item-my-comment .my-item-my-comment-text {
   margin-right: 10px;
 }
-
+.my-item-resource-parent {
+  margin-bottom: 20px;
+}
 .my-item-resource {
   cursor: pointer;
   display: block;
   color: #4181c4;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 .my-item-resource:hover {
   color: #ff5e52;
