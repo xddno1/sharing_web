@@ -9,7 +9,15 @@
       }}</span>
       <span class="my-commentbox-time">
         {{ commentboxitem.time.replace("T", "  ").split(".")[0] }}</span
+      ><a-popconfirm
+        v-if="$store.state.loginstate.admintoken"
+        title="主人您狠心要删除我嘛？ToT"
+        ok-text="Yes"
+        cancel-text="No"
+        @confirm="backcommentid"
       >
+        <a-icon type="delete" class="btn deletebtn" />
+      </a-popconfirm>
     </div>
     <span class="my-commentbox-describe">{{ commentboxitem.content }} </span>
   </div>
@@ -23,7 +31,17 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    backcommentid() {
+      console.log(1);
+      console.log(this.commentboxitem);
+      if (this.commentboxitem.commentID) {
+        this.$emit("delcomment", this.commentboxitem.commentID);
+      } else {
+        this.$emit("delhallcomment", this.commentboxitem.id);
+      }
+    },
+  },
   created() {},
 };
 </script>

@@ -45,6 +45,7 @@
     </div>
     <mycommentbox
       v-for="(item, index) in comments"
+      @delcomment="delcomment"
       :key="index"
       :commentboxitem="item"
     ></mycommentbox>
@@ -105,22 +106,37 @@ export default {
             token: this.$store.state.loginstate.usertoken,
           },
         }).then((e) => {
-          this.$message.success("评论成功！");
           this.addcomment = "";
-          axios
-            .get(
-              ` http://121.4.187.232:8080/passage/queryCommentByPassageID?passageID=${this.pageid}`
-            )
-            .then((e) => {
-              this.$message.success("获取评论成功");
-              console.log(e.data);
-              this.comments = e.data;
-            })
-            .catch((e) => {
-              this.$message.error("获取评论失败！");
-            });
+          this.getcomment();
+          this.$message.success("评论成功！");
         });
       }
+    },
+    delcomment(e) {
+      axios({
+        method: "post",
+        url: `http://121.4.187.232:8080/admin/deleteComment?commentID=${e}`,
+        headers: {
+          token: this.$store.state.loginstate.admintoken,
+        },
+      }).then((e) => {
+        this.getcomment();
+        this.$message.success("删除成功！");
+      });
+    },
+    getcomment() {
+      axios
+        .get(
+          ` http://121.4.187.232:8080/passage/queryCommentByPassageID?passageID=${this.pageid}`
+        )
+        .then((e) => {
+          this.$message.success("获取评论成功");
+          console.log(e.data);
+          this.comments = e.data;
+        })
+        .catch((e) => {
+          this.$message.error("获取评论失败！");
+        });
     },
   },
   created() {
@@ -193,6 +209,7 @@ export default {
 
 .my-item-my-comment {
   display: flex;
+  margin-bottom: 20px;
 }
 .my-item-my-comment .my-item-my-comment-text {
   margin-right: 10px;

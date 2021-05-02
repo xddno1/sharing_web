@@ -34,6 +34,7 @@
           <mycommentbox
             v-for="(item, index) in hallcommentdata"
             :key="index"
+            @delhallcomment="delhallcomment"
             :commentboxitem="item"
           ></mycommentbox>
         </div>
@@ -116,6 +117,18 @@ export default {
             this.gethallcomment();
           });
       }
+    },
+    delhallcomment(e) {
+      axios({
+        method: "post",
+        url: `http://121.4.187.232:8080/admin/deleteHallComment?ID=${e}`,
+        headers: {
+          token: this.$store.state.loginstate.admintoken,
+        },
+      }).then((e) => {
+        this.$message.success("删除成功！");
+        this.gethallcomment();
+      });
     },
     changepagefunc(changeway) {
       if (changeway == "+") {

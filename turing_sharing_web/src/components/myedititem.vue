@@ -35,15 +35,30 @@
         v-for="(item, index) in resources"
         :key="index"
         class="my-edit-item-resource"
-        @click="downloadresource(index)"
       >
         <span class="my-edit-item-resource-title">资源{{ index + 1 }}:</span>
         <a-tag
-          >{{ item.address.split("/")[4] }}
-          <a-icon type="delete" class="btn deletebtn" /></a-tag
+          >{{ getresourcename(item) }}
+
+          <a-popconfirm
+            title="主人您狠心要删除我嘛？ToT"
+            ok-text="Yes"
+            cancel-text="No"
+            @confirm="adddeletesourceid(index)"
+          >
+            <a-icon
+              type="delete"
+              class="btn deletebtn"
+            /> </a-popconfirm></a-tag
       ></span>
+      <input
+        ref="addsourcebtn"
+        type="file"
+        style="display: none"
+        @change="addsource"
+      />
       <span class="my-edit-item-resource-title">添加资源：</span>
-      <a-tag class="my-edit-item-resource-add-btn"
+      <a-tag class="my-edit-item-resource-add-btn" @click="addsourceclick"
         >添加 <a-icon type="plus" class="addbtn"
       /></a-tag>
     </div>
@@ -72,6 +87,7 @@
       </div>
       <mycommentbox
         v-for="(item, index) in comments"
+        @delcomment="delcomment"
         :key="index"
         :commentboxitem="item"
       ></mycommentbox>
@@ -112,8 +128,10 @@ export default {
       addcomment: "",
       previewVisible: false,
       previewImage: "",
-      oldimg: [],
       delimgid: [],
+      deletesourceid: [],
+      submitresource: [],
+      isimg: true,
     };
   },
   methods: {
@@ -133,19 +151,34 @@ export default {
         }).then((e) => {
           this.$message.success("评论成功！");
           this.addcomment = "";
-          axios
-            .get(
-              ` http://121.4.187.232:8080/passage/queryCommentByPassageID?passageID=${this.pageid}`
-            )
-            .then((e) => {
-              this.$message.success("获取评论成功");
-              this.comments = e.data;
-            })
-            .catch((e) => {
-              this.$message.error("获取评论失败！");
-            });
+          this.getcomment();
         });
       }
+    },
+    delcomment(e) {
+      axios({
+        method: "post",
+        url: `http://121.4.187.232:8080/admin/deleteComment?commentID=${e}`,
+        headers: {
+          token: this.$store.state.loginstate.admintoken,
+        },
+      }).then((e) => {
+        this.getcomment();
+        this.$message.success("删除成功！");
+      });
+    },
+    getcomment() {
+      axios
+        .get(
+          ` http://121.4.187.232:8080/passage/queryCommentByPassageID?passageID=${this.pageid}`
+        )
+        .then((e) => {
+          this.$message.success("获取评论成功");
+          this.comments = e.data;
+        })
+        .catch((e) => {
+          this.$message.error("获取评论失败！");
+        });
     },
     handleCancel() {
       this.previewVisible = false;
@@ -158,23 +191,27 @@ export default {
       this.previewVisible = true;
     },
     handleChange({ fileList }) {
-      for (let i in this.filelist) {
-        //console.log(this.filelist[i]);
-        if (fileList[i] != this.filelist[i]) {
-          if (this.filelist[i].url) {
-            console.log(this.filelist[i].uid);
+      if (this.isimg) {
+        for (let i in this.filelist) {
+          //console.log(this.filelist[i]);
+          if (fileList[i] != this.filelist[i]) {
+            if (this.filelist[i].url) {
+              this.delimgid.push(this.filelist[i].uid.split(":")[1]);
+            }
+            break;
           }
-          break;
+        }
+
+        this.filelist = fileList;
+        this.submitimg = [];
+
+        // 老图片为undefined 新图片为 file对象
+        for (let i in fileList) {
+          this.submitimg.push(fileList[i].originFileObj);
+          // delete this.filelist[i].originFileObj.uid;
         }
       }
-      this.filelist = fileList;
-      this.submitimg = [];
-
-      // 老图片为undefined 新图片为 file对象
-      for (let i in fileList) {
-        // delete this.filelist[i].originFileObj.uid;
-        this.submitimg.push(fileList[i].originFileObj);
-      }
+      this.isimg = true;
     },
     base64ToBlob({ b64data = "", contentType = "", sliceSize = 512 } = {}) {
       return new Promise((resolve, reject) => {
@@ -206,7 +243,13 @@ export default {
         resolve(result);
       });
     },
-    cutupload() {
+    cutupload(file) {
+      const isJpgOrPng =
+        file.type === "image/jpeg" || file.type === "image/png";
+      if (!isJpgOrPng) {
+        this.$message.error("You can only upload JPG file!");
+        this.isimg = false;
+      }
       return false;
     },
     newitem() {
@@ -229,6 +272,8 @@ export default {
         }).then((e) => {
           this.$message.success("修改成功！");
           this.uploadimg();
+          this.uploadresource();
+          this.deletesource();
         });
       }
     },
@@ -255,7 +300,6 @@ export default {
           formData.append("file", this.submitimg[i]);
         }
       }
-      console.log(formData.get("file"));
       axios({
         method: "post",
         url: "http://121.4.187.232:8080/admin/uploadImg",
@@ -265,11 +309,83 @@ export default {
           token: this.$store.state.loginstate.admintoken,
         },
       }).then((e) => {
-        this.$message.success("上传成功！");
+        for (let i in this.delimgid) {
+          this.delimg(this.delimgid[i]);
+        }
+        this.$message.success("上传图片成功！");
         this.$router.replace({
           name: "admin",
         });
       });
+    },
+    delimg(i) {
+      axios({
+        method: "post",
+        url: `http://121.4.187.232:8080/admin/deleteImg?imgID=${i}`,
+        headers: {
+          token: this.$store.state.loginstate.admintoken,
+        },
+      }).then((e) => {});
+    },
+    adddeletesourceid(e) {
+      if (this.resources[e].id) {
+        this.deletesourceid.push(this.resources[e].id);
+      }
+      this.resources.splice(e, 1);
+      console.log(this.resources);
+    },
+    deletesource() {
+      for (let i of this.deletesourceid) {
+        axios({
+          method: "post",
+          url: `http://121.4.187.232:8080/admin/deleteResources?resourcesID=${i}`,
+          headers: {
+            token: this.$store.state.loginstate.admintoken,
+          },
+        }).then((e) => {
+          console.log("ok");
+        });
+      }
+    },
+    addsourceclick() {
+      this.$refs.addsourcebtn.click();
+    },
+    addsource(e) {
+      let addfile = this.$refs.addsourcebtn.files[0];
+      this.submitresource.push(addfile);
+      this.resources.push(addfile);
+    },
+    uploadresource() {
+      let formData = new FormData();
+      formData.append("passageID", this.pageid);
+      console.log(this.submitresource);
+      for (let i of this.submitresource) {
+        console.log(i);
+        formData.append("file", i);
+      }
+      console.log(formData.getAll("file"));
+      axios({
+        method: "post",
+        url: "http://121.4.187.232:8080/admin/uploadResources",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          token: this.$store.state.loginstate.admintoken,
+        },
+      }).then((e) => {
+        this.$message.success("上传文件成功！");
+      });
+    },
+  },
+  computed: {
+    getresourcename() {
+      return (item) => {
+        if (item.address) {
+          return item.address.split("/")[4];
+        } else {
+          return item.name;
+        }
+      };
     },
   },
   created() {
@@ -300,7 +416,6 @@ export default {
           this.resources = a.data[1];
           this.comments = a.data[3];
           this.oldimg = a.data[2];
-          console.log(this.oldimg);
           for (let i in a.data[2]) {
             this.base64ToBlob({
               b64data: a.data[2][i],
@@ -308,7 +423,7 @@ export default {
             }).then((res) => {
               // 转换后的blob对象
               this.filelist.push({
-                uid: "-" + i,
+                uid: i,
                 name: "a picture",
                 status: "done",
                 url: res.preview,
