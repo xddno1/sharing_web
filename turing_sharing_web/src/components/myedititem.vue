@@ -196,7 +196,7 @@ export default {
           //console.log(this.filelist[i]);
           if (fileList[i] != this.filelist[i]) {
             if (this.filelist[i].url) {
-              this.delimgid.push(this.filelist[i].uid.split(":")[1]);
+              this.delimgid.push(this.filelist[i].uid);
             }
             break;
           }
@@ -286,7 +286,6 @@ export default {
         },
       }).then((e) => {
         this.$message.success("创建成功！");
-        console.log(e.data.split(":")[1]);
         this.pageid = e.data.split(":")[1];
         this.uploadimg();
         this.uploadresource();
