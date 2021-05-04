@@ -6,7 +6,7 @@ const index = () => import("@/components/myindex");
 const item = () => import("@/components/myitem");
 const admin = () => import("@/components/myadmin");
 const edititem = () => import("@/components/myedititem");
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: "/",
@@ -35,3 +35,5 @@ export default new Router({
     }
   ]
 });
+
+export default router;

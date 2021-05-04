@@ -2,12 +2,24 @@
   <div class="mypage contianer">
     <div class="my-edit-item-title-parent">
       <span class="my-edit-item-title">标题</span>
-      <a-textarea class="my-edit-item-input" v-model="title" auto-size />
+      <a-textarea
+        v-model="title"
+        class="my-edit-item-input"
+        :class="{ 'textarea-warn': overtitlelen }"
+        auto-size
+      />
+      <span v-if="overtitlelen" class="length-warn">长度超过25个字啦</span>
     </div>
 
     <div class="my-edit-item-content-parent">
       <span class="my-edit-item-title">内容</span>
-      <a-textarea v-model="content" class="my-edit-item-input" auto-size />
+      <a-textarea
+        v-model="content"
+        class="my-edit-item-input"
+        :class="{ 'textarea-warn': overcontentlen }"
+        auto-size
+      />
+      <span v-if="overcontentlen" class="length-warn">长度超过600个字啦</span>
     </div>
 
     <div class="clearfix my-edit-item-picture">
@@ -386,6 +398,12 @@ export default {
         }
       };
     },
+    overtitlelen() {
+      return this.title.length > 25;
+    },
+    overcontentlen() {
+      return this.content.length > 600;
+    },
   },
   created() {
     if (!this.$store.state.loginstate.admintoken) {
@@ -435,7 +453,6 @@ export default {
           this.$message.error("好像网络不怎么好呢..", 6000);
         });
     } else {
-      this.title = "新建文章";
     }
   },
 };

@@ -20,7 +20,6 @@ const store = new Vuex.Store({
     }
   }
 });
-
 const myVue = new Vue({
   el: "#app",
   store,
