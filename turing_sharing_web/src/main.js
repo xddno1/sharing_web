@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
 import App from "./App";
 import router from "./router";
 import ANT from "ant-design-vue";
@@ -14,6 +15,11 @@ const store = new Vuex.Store({
     loginstate: {},
     maxpage: {}
   },
+  plugins: [
+    createPersistedState({
+      storage: window.sessionStorage
+    })
+  ],
   mutations: {
     upDateToken(state, data) {
       state.loginstate = data;
