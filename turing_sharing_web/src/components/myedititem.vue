@@ -184,10 +184,7 @@ export default {
       this.previewVisible = false;
     },
     async handlePreview(file) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-      }
-      this.previewImage = file.url || file.preview;
+      this.previewImage = file.url || file.thumbUrl;
       this.previewVisible = true;
     },
     handleChange({ fileList }) {
