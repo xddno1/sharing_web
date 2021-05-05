@@ -23,10 +23,11 @@
         {{ item.address.split("/")[4] }}</span
       >
     </div>
-
+    <span v-if="overcommentlen" class="length-warn">长度超过25个字啦</span>
     <div class="my-item-my-comment">
       <a-textarea
         class="my-item-my-comment-text"
+        :class="{ 'textarea-warn': overcommentlen }"
         v-model="addcomment"
         placeholder="我也来说一句. . ."
         auto-size
@@ -39,6 +40,7 @@
         评论
       </a-button>
     </div>
+
     <mycommentbox
       v-for="(item, index) in comments"
       @delcomment="delcomment"
@@ -95,30 +97,34 @@ export default {
       ) {
         this.$message.error("请先登录");
       } else {
-        if (this.$store.state.loginstate.userid) {
-          axios({
-            method: "post",
-            url: `http://121.4.187.232:8080/comment/createComment?content=${this.addcomment}&passageID=${this.pageid}&userID=${this.$store.state.loginstate.userid}`,
-            headers: {
-              token: this.$store.state.loginstate.usertoken,
-            },
-          }).then((e) => {
-            this.addcomment = "";
-            this.getcomment();
-            this.$message.success("评论成功！");
-          });
+        if (this.overcommentlen) {
+          this.$message.error("请检查评论长度");
         } else {
-          axios({
-            method: "post",
-            url: `http://121.4.187.232:8080/admin/createComment?content=${this.addcomment}&passageID=${this.pageid}`,
-            headers: {
-              token: this.$store.state.loginstate.admintoken,
-            },
-          }).then((e) => {
-            this.$message.success("评论成功！");
-            this.addcomment = "";
-            this.getcomment();
-          });
+          if (this.$store.state.loginstate.userid) {
+            axios({
+              method: "post",
+              url: `http://121.4.187.232:8080/comment/createComment?content=${this.addcomment}&passageID=${this.pageid}&userID=${this.$store.state.loginstate.userid}`,
+              headers: {
+                token: this.$store.state.loginstate.usertoken,
+              },
+            }).then((e) => {
+              this.addcomment = "";
+              this.getcomment();
+              this.$message.success("评论成功！");
+            });
+          } else {
+            axios({
+              method: "post",
+              url: `http://121.4.187.232:8080/admin/createComment?content=${this.addcomment}&passageID=${this.pageid}`,
+              headers: {
+                token: this.$store.state.loginstate.admintoken,
+              },
+            }).then((e) => {
+              this.$message.success("评论成功！");
+              this.addcomment = "";
+              this.getcomment();
+            });
+          }
         }
       }
     },
@@ -147,6 +153,11 @@ export default {
         .catch((e) => {
           this.$message.error("获取评论失败！");
         });
+    },
+  },
+  computed: {
+    overcommentlen() {
+      return this.addcomment.length > 25;
     },
   },
   created() {

@@ -435,34 +435,4 @@ export default {
   background-color: #fff;
   margin-bottom: 40px;
 }
-.btn {
-  cursor: pointer;
-}
-.deletebtn {
-  color: red;
-}
-.editbtn {
-  color: dodgerblue;
-}
-.btn :hover {
-  animation-name: btnhover;
-  animation-duration: 0.1s;
-  animation-fill-mode: forwards;
-}
-.btn :active {
-  animation-name: btnactive;
-  animation-duration: 0.1s;
-}
-@keyframes btnhover {
-  to {
-    width: 120%;
-    height: 120%;
-  }
-}
-@keyframes btnactive {
-  to {
-    width: 90%;
-    height: 90%;
-  }
-}
 </style>

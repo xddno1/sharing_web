@@ -41,10 +41,12 @@
         <div class="my-hallcomment-parent">
           <a-textarea
             class="my-hallcomment-text"
+            :class="{ 'textarea-warn': overcommentlen }"
             v-model="mycomment"
             placeholder="我也来说一句. . ."
             auto-size
           />
+
           <a-button
             class="my-hallcomment-btn"
             type="primary"
@@ -52,6 +54,7 @@
             >发表</a-button
           >
         </div>
+        <span v-if="overcommentlen" class="length-warn">长度超过25个字啦</span>
       </div>
     </div>
   </div>
@@ -107,15 +110,19 @@ export default {
       if (this.mycomment == "") {
         this.$message.error("请输入内容ToT");
       } else {
-        axios
-          .post(
-            `http://121.4.187.232:8080/hallComment/createHallComment?content=${this.mycomment}`
-          )
-          .then((a) => {
-            this.$message.success("评论成功！！");
-            this.mycomment = "";
-            this.gethallcomment();
-          });
+        if (this.overcommentlen) {
+          this.$message.error("请检查评论长度ToT");
+        } else {
+          axios
+            .post(
+              `http://121.4.187.232:8080/hallComment/createHallComment?content=${this.mycomment}`
+            )
+            .then((a) => {
+              this.$message.success("评论成功！！");
+              this.mycomment = "";
+              this.gethallcomment();
+            });
+        }
       }
     },
     delhallcomment(e) {
@@ -148,6 +155,9 @@ export default {
     },
     havenext: function () {
       return this.maxpage != this.pageNo;
+    },
+    overcommentlen() {
+      return this.mycomment.length > 25;
     },
   },
   created() {

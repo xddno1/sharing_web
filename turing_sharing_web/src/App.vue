@@ -24,4 +24,34 @@ export default {
   padding-bottom: 50px;
   padding-top: 100px;
 }
+.btn {
+  cursor: pointer;
+}
+.deletebtn {
+  color: red;
+}
+.editbtn {
+  color: dodgerblue;
+}
+.btn :hover {
+  animation-name: btnhover;
+  animation-duration: 0.1s;
+  animation-fill-mode: forwards;
+}
+.btn :active {
+  animation-name: btnactive;
+  animation-duration: 0.1s;
+}
+@keyframes btnhover {
+  to {
+    width: 120%;
+    height: 120%;
+  }
+}
+@keyframes btnactive {
+  to {
+    width: 90%;
+    height: 90%;
+  }
+}
 </style>

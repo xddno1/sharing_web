@@ -47,8 +47,6 @@ export default {
 
 <style>
 .mycommentbox {
-  width: 100%;
-  flex-direction: column;
   padding: 10px 15px 18px;
   border-bottom: #e9e9e9 2px solid;
 }
@@ -66,7 +64,7 @@ export default {
   padding: 5px 12px;
   font-size: 15px;
   font-weight: 400;
-  display: flex;
-  overflow: hidden;
+  display: block;
+  word-break: break-all;
 }
 </style>

@@ -82,9 +82,11 @@
     </div>
     <div v-if="time">
       <span class="my-edit-item-title">评论</span>
+      <span v-if="overcommentlen" class="length-warn">长度超过25个字啦</span>
       <div class="my-edit-item-my-comment">
         <a-textarea
           class="my-edit-item-my-comment-text"
+          :class="{ 'textarea-warn': overcommentlen }"
           v-model="addcomment"
           placeholder="我也来说一句. . ."
           auto-size
@@ -154,17 +156,21 @@ export default {
       ) {
         this.$message.error("请先登录");
       } else {
-        axios({
-          method: "post",
-          url: `http://121.4.187.232:8080/admin/createComment?content=${this.addcomment}&passageID=${this.pageid}`,
-          headers: {
-            token: this.$store.state.loginstate.admintoken,
-          },
-        }).then((e) => {
-          this.$message.success("评论成功！");
-          this.addcomment = "";
-          this.getcomment();
-        });
+        if (this.overcommentlen) {
+          this.$message.error("请检查评论长度");
+        } else {
+          axios({
+            method: "post",
+            url: `http://121.4.187.232:8080/admin/createComment?content=${this.addcomment}&passageID=${this.pageid}`,
+            headers: {
+              token: this.$store.state.loginstate.admintoken,
+            },
+          }).then((e) => {
+            this.$message.success("评论成功！");
+            this.addcomment = "";
+            this.getcomment();
+          });
+        }
       }
     },
     delcomment(e) {
@@ -431,6 +437,9 @@ export default {
     },
     overcontentlen() {
       return this.content.length > 600;
+    },
+    overcommentlen() {
+      return this.addcomment.length > 25;
     },
   },
   created() {
