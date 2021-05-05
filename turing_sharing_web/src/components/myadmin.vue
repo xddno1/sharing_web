@@ -9,7 +9,9 @@
       >
     </div>
     <a-modal :visible="visible" :footer="null" @cancel="editnotice_show_close">
-      <div><span class="my-admin-title">发布公告</span></div>
+      <div>
+        <span class="my-admin-title" style="margin-left: 0">发布公告</span>
+      </div>
       <a-textarea
         v-model="noticecontent"
         placeholder="快输入要发布的公告吧！！"
@@ -148,17 +150,19 @@ export default {
     return {
       itemscolumns: [
         {
-          title: "time",
+          title: "时间",
           dataIndex: "time",
+          width: 200,
           key: "time",
         },
         {
-          title: "title",
+          title: "标题",
           dataIndex: "title",
           key: "title",
         },
         {
-          title: "operation",
+          title: "操作",
+          width: 100,
           dataIndex: "id",
           key: "id",
           scopedSlots: { customRender: "edit" },
@@ -166,22 +170,20 @@ export default {
       ],
       hallcommentcolumns: [
         {
-          title: "Id",
-          dataIndex: "id",
-          key: "hallcommentId",
-        },
-        {
-          title: "Content",
-          dataIndex: "content",
-          key: "hallcommentcontent",
-        },
-        {
-          title: "Time",
+          title: "时间",
           dataIndex: "time",
+          width: 200,
           key: "hallcommenttime",
         },
         {
-          title: "operation",
+          title: "内容",
+          dataIndex: "content",
+          ellipsis: true,
+          key: "hallcommentcontent",
+        },
+        {
+          title: "操作",
+          width: 100,
           dataIndex: "id",
           key: "id",
           scopedSlots: { customRender: "edit" },
@@ -204,6 +206,10 @@ export default {
   },
   methods: {
     editnotice_show_close() {
+      axios.get(`http://121.4.187.232:8080/notice/queryNotice`).then((a) => {
+        console.log(a.data);
+        this.noticecontent = a.data;
+      });
       this.visible = !this.visible;
     },
     sentnotice() {
@@ -214,9 +220,13 @@ export default {
         headers: {
           token: this.$store.state.loginstate.admintoken,
         },
-      }).then((e) => {
-        this.$message.success("发布成功！");
-      });
+      })
+        .then((e) => {
+          this.$message.success("发布成功！");
+        })
+        .catch((e) => {
+          this.$message.error("发布失败！");
+        });
     },
     uploadimg() {
       let formData = new FormData();
@@ -377,15 +387,8 @@ export default {
     },
   },
   created() {
-    if (!this.$store.state.loginstate.admintoken) {
-      this.$message.error("请使用管理员登录！");
-      this.$router.replace({
-        name: "index",
-      });
-    } else {
-      this.getbox();
-      this.getallhallcomment();
-    }
+    this.getbox();
+    this.getallhallcomment();
   },
 };
 </script>

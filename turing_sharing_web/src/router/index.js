@@ -36,4 +36,20 @@ const router = new Router({
   ]
 });
 
+router.beforeEach((to, from, next) => {
+  let vuexdata = localStorage.getItem("vuex");
+  if (vuexdata) {
+    vuexdata = JSON.parse(vuexdata);
+  }
+  if (to.path == "/admin" || to.path == "/edititem") {
+    if (vuexdata.loginstate.admintoken) {
+      next();
+    } else {
+      alert("非管理员不可访问");
+    }
+  } else {
+    next();
+  }
+});
+
 export default router;

@@ -272,36 +272,52 @@ export default {
       if (!this.title || !this.content) {
         this.$message.error("请输入文章标题或者内容！");
       } else {
-        axios({
-          method: "post",
-          url: `http://121.4.187.232:8080/admin/updatePassage?content=${this.content}&passageID=${this.pageid}&title=${this.title}`,
-          headers: {
-            token: this.$store.state.loginstate.admintoken,
-          },
-        }).then((e) => {
-          this.$message.success("修改成功！");
-          this.uploadimg();
-          this.uploadresource();
-          this.deletesource();
-        });
+        if (this.overtitlelen || this.overcontentlen) {
+          this.$message.error("请检查文章标题和内容的长度");
+        } else {
+          axios({
+            method: "post",
+            url: `http://121.4.187.232:8080/admin/updatePassage?content=${this.content}&passageID=${this.pageid}&title=${this.title}`,
+            headers: {
+              token: this.$store.state.loginstate.admintoken,
+            },
+          }).then((e) => {
+            this.$message.success("修改成功！");
+            this.uploadimg();
+            this.uploadresource();
+            this.deletesource();
+          });
+        }
       }
     },
     creatitem() {
-      axios({
-        method: "post",
-        url: `http://121.4.187.232:8080/admin/createPassage?content=${this.content}&title=${this.title}`,
-        headers: {
-          token: this.$store.state.loginstate.admintoken,
-        },
-      }).then((e) => {
-        this.$message.success("创建成功！");
-        this.pageid = e.data.split(":")[1];
-        this.uploadimg();
-        this.uploadresource();
-        this.$router.replace({
-          name: "admin",
-        });
-      });
+      if (!this.title || !this.content) {
+        this.$message.error("请输入文章标题或者内容！");
+      } else {
+        if (this.overtitlelen || this.overcontentlen) {
+          this.$message.error("请检查文章标题和内容的长度");
+        } else {
+          axios({
+            method: "post",
+            url: `http://121.4.187.232:8080/admin/createPassage?content=${this.content}&title=${this.title}`,
+            headers: {
+              token: this.$store.state.loginstate.admintoken,
+            },
+          })
+            .then((e) => {
+              this.$message.success("创建成功！");
+              this.pageid = e.data.split(":")[1];
+              this.uploadimg();
+              this.uploadresource();
+              this.$router.replace({
+                name: "admin",
+              });
+            })
+            .catch(() => {
+              this.$message.error("创建失败！");
+            });
+        }
+      }
     },
     uploadimg() {
       let formData = new FormData();
@@ -319,15 +335,19 @@ export default {
           "Content-Type": "multipart/form-data",
           token: this.$store.state.loginstate.admintoken,
         },
-      }).then((e) => {
-        for (let i in this.delimgid) {
-          this.delimg(this.delimgid[i]);
-        }
-        this.$message.success("上传图片成功！");
-        this.$router.replace({
-          name: "admin",
+      })
+        .then((e) => {
+          for (let i in this.delimgid) {
+            this.delimg(this.delimgid[i]);
+          }
+          this.$message.success("上传图片成功！");
+          this.$router.replace({
+            name: "admin",
+          });
+        })
+        .catch(() => {
+          this.$message.error("上传图片失败！");
         });
-      });
     },
     delimg(i) {
       axios({
@@ -353,9 +373,13 @@ export default {
           headers: {
             token: this.$store.state.loginstate.admintoken,
           },
-        }).then((e) => {
-          console.log("ok");
-        });
+        })
+          .then((e) => {
+            this.$message.success("删除资源成功！");
+          })
+          .catch(() => {
+            this.$message.error("删除资源失败！");
+          });
       }
     },
     addsourceclick() {
@@ -383,9 +407,13 @@ export default {
           "Content-Type": "multipart/form-data",
           token: this.$store.state.loginstate.admintoken,
         },
-      }).then((e) => {
-        this.$message.success("上传文件成功！");
-      });
+      })
+        .then((e) => {
+          this.$message.success("上传文件成功！");
+        })
+        .catch((e) => {
+          this.$message.error("上传文件失败！");
+        });
     },
   },
   computed: {
@@ -406,12 +434,6 @@ export default {
     },
   },
   created() {
-    if (!this.$store.state.loginstate.admintoken) {
-      this.$message.error("请使用管理员登录！");
-      this.$router.replace({
-        name: "index",
-      });
-    }
     if (this.$route.query.item != "newitem") {
       this.pageid = this.$route.query.item;
       let hideloading = this.$message.loading("资源加载中，请稍后..", 0);
