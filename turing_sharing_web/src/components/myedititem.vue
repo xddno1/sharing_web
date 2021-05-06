@@ -464,6 +464,7 @@ export default {
           this.resources = a.data[1];
           this.comments = a.data[3];
           this.oldimg = a.data[2];
+          console.log(a.data[2]);
           for (let i in a.data[2]) {
             this.base64ToBlob({
               b64data: a.data[2][i],
