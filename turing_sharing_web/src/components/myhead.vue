@@ -368,7 +368,7 @@ export default {
 <style>
 .myhead {
   z-index: 100;
-  background-color: #fff;
+  background-color: #f0f0f0;
   position: fixed;
   height: 50px;
   width: 100%;
@@ -397,8 +397,21 @@ export default {
 }
 
 .adminbutton {
+  border-color: #fff;
+  color: #1890ff;
+  background-color: #fff;
   position: relative;
   margin-right: 5px;
+}
+.adminbutton:hover {
+  border-color: #fff;
+  color: #1890ff;
+  background-color: #fff;
+}
+.adminbutton:focus {
+  border-color: #fff;
+  color: #1890ff;
+  background-color: #fff;
 }
 .length-warn {
   font-size: 8px;
@@ -406,6 +419,7 @@ export default {
   line-height: 8px;
 }
 .textarea-warn {
+  color: #ff5e52;
   border-color: #ff5e52;
 }
 .div-warn {

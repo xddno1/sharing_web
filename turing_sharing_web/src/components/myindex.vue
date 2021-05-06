@@ -161,6 +161,12 @@ export default {
     },
   },
   created() {
+    axios
+      .get(`https://www.meishij.net/china-food/caixi/qingzhencai/`)
+      .then((a) => {
+        console.log(a);
+      });
+
     this.getnotice();
     this.gethallcomment();
     this.getbox();
