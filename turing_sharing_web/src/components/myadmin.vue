@@ -178,7 +178,7 @@ export default {
         {
           title: "内容",
           dataIndex: "content",
-          ellipsis: true,
+
           key: "hallcommentcontent",
         },
         {
@@ -283,7 +283,6 @@ export default {
         method: "get",
         url: ` http://121.4.187.232:8080/hallComment/queryAllHallComment`,
       }).then((e) => {
-        this.$message.success("获取成功！");
         for (let i in e.data) {
           e.data[i].time = e.data[i].time.replace("T", "  ").split(".")[0];
         }
@@ -308,7 +307,6 @@ export default {
         method: "get",
         url: ` http://121.4.187.232:8080/passage/passageResources?passageID=${this.itemid}`,
       }).then((e) => {
-        this.$message.success("获取成功！");
         // e[0].content       内容
         // e[0].time          时间
         // e[0].title         标题
