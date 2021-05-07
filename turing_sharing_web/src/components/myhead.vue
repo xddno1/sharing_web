@@ -397,21 +397,21 @@ export default {
 }
 
 .adminbutton {
-  border-color: #fff;
+  border-color: #f0f0f0;
   color: #1890ff;
-  background-color: #fff;
+  background-color: #f0f0f0;
   position: relative;
   margin-right: 5px;
 }
 .adminbutton:hover {
-  border-color: #fff;
+  border-color: #f0f0f0;
   color: #1890ff;
-  background-color: #fff;
+  background-color: #f0f0f0;
 }
 .adminbutton:focus {
-  border-color: #fff;
+  border-color: #f0f0f0;
   color: #1890ff;
-  background-color: #fff;
+  background-color: #f0f0f0;
 }
 .length-warn {
   font-size: 8px;
