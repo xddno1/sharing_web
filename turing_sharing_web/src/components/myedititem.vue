@@ -462,7 +462,7 @@ export default {
           this.time = a.data[0].time;
           this.title = a.data[0].title;
           this.resources = a.data[1];
-          this.comments = a.data[3];
+          this.getcomment();
           this.oldimg = a.data[2];
           console.log(a.data[2]);
           for (let i in a.data[2]) {

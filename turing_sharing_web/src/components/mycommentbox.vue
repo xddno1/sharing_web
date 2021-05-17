@@ -1,5 +1,5 @@
 <template>
-  <div class="mycommentbox">
+  <div class="mycommentbox" v-if="commentboxitem.time">
     <div class="commentbox-title">
       <span v-if="!commentboxitem.username" class="my-commentbox-title">
         游客</span

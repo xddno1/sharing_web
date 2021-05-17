@@ -180,7 +180,7 @@ export default {
         this.time = a.data[0].time;
         this.title = a.data[0].title;
         this.resources = a.data[1];
-        this.comments = a.data[3];
+        this.getcomment();
         this.pictures = a.data[2];
         console.log(this.pictures);
       })
